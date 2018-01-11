@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <GridPane prefHeight="0.0" prefWidth="300.0" VBox.vgrow="ALWAYS">
+         <children>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="234.0" layoutY="154.0" text="APO Chess" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="6.0">
+                     <font>
+                        <Font name="Berlin Sans FB Bold" size="39.0" />
+                     </font></Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+               <children>
+                  <Label layoutX="25.0" layoutY="163.0" text="Un projet Polytech 2017/2018" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="0.0" />
+               </children></AnchorPane>
+         </children>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
+      <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Pane HBox.hgrow="ALWAYS" />
+            <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label />
+                  <Label text="Projet réalisé par :" />
+                  <Label text="Tancrède SUARD" />
+                  <Label text="Pierre-Elliott THIBOUD" />
+                  <Label />
+                  <Label text="Pour Polytech" />
+                  <Label text="Année 2017/2018" />
+               </children>
+            </VBox>
+            <Pane HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
