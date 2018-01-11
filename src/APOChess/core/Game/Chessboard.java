@@ -1,13 +1,19 @@
 package APOChess.core.Game;
 
+import APOChess.Main;
 import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Pieces.*;
+
+import java.util.ArrayList;
+import java.util.logging.Level;
 
 public class Chessboard {
 
     private Tile[][] board;
+    private Main main;
 
-    public Chessboard() {
+    public Chessboard(Main main) {
+        this.main = main;
         this.board = new Tile[8][8];
 
         for (int i = 0; i < 8; i++) {
@@ -68,7 +74,28 @@ public class Chessboard {
         configFile = null;
     }
 
-    public Tile[][] getBoard(){
-        return board;
+    public Tile getTile(int col, int row){
+        return board[col][row];
+    }
+
+    public boolean isOccuped(Position position){
+        main.logger.log(Level.INFO, "Position isOccuped " + position.toString());
+        return board[position.getPosX()][position.getPosY()].isOccuped();
+    }
+
+    public boolean isOnGrid(Position position){
+        return position.getPosX() >= 0 && position.getPosX() < 8 && position.getPosY() >= 0 && position.getPosY() < 8;
+    }
+
+    public ArrayList<Position> getAvailableMoves(int col, int row){
+        ArrayList<Position> positions = new ArrayList<>();
+
+        if(!isOnGrid(new Position(col, row))){
+            main.logger.log(Level.INFO, "Not on grid " + (new Position(col, row)).toString());
+            return positions;
+        }
+
+        positions = board[col][row].getPiece().getPossibleMoves(new Position(col, row), this);
+        return positions;
     }
 }

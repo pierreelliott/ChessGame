@@ -50,7 +50,7 @@ public class Main extends Application {
     public void newGame(boolean solo){
         menu.hide();
 
-        chessboard = new Chessboard();
+        chessboard = new Chessboard(this);
         chessboard.initialize();
 
         GridPane root = new GridPane();

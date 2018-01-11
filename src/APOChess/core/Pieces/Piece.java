@@ -1,7 +1,11 @@
 package APOChess.core.Pieces;
 
 import APOChess.core.Enum.ColorEnum;
-import APOChess.core.Game.Move;
+import APOChess.core.Game.Chessboard;
+import APOChess.core.Game.Position;
+import APOChess.core.Game.Tile;
+
+import java.util.ArrayList;
 
 public abstract class Piece {
     protected ColorEnum color;
@@ -31,5 +35,5 @@ public abstract class Piece {
     }
 
     //TODO Décommenter et implémenter pour chacune des classes
-    //public abstract Move[] getPossibleMoves();
+    public abstract ArrayList<Position> getPossibleMoves(Position position, Chessboard chessboard);
 }

@@ -1,6 +1,7 @@
 package APOChess.gui.controller;
 
 import APOChess.Main;
+import APOChess.core.Game.Position;
 import APOChess.gui.custom.CustomCell;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
@@ -42,7 +44,7 @@ public class GameController extends MainController {
                 square.setFill(color);
 
                 ImageView imgv = new ImageView(new Image(getClass()
-                        .getResourceAsStream("../../res/" + main.getChessboard().getBoard()[col][row].getPiece().getImage())));
+                        .getResourceAsStream("../../res/" + main.getChessboard().getTile(col, row).getPiece().getImage())));
 
                 gridID.add(square, col+1, row+1);
                 gridID.add(imgv, col+1, row+1);
@@ -85,19 +87,25 @@ public class GameController extends MainController {
 
     // TODO cellClicked
     public void cellClicked(int col, int row){
-        customCells[col][row].setColor(Color.BLACK);
+        //customCells[col][row].setColor(Color.BLACK);
+//        main.getChessboard().getTile(col, row).getPiece().getPossibleMoves(new Position(col, row))
+        ArrayList<Position> positions = main.getChessboard().getAvailableMoves(col, row);
+        for (Position p : positions ) {
+            customCells[p.getPosX()][p.getPosY()].setColor(Color.RED);
+        }
+
         main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] clicked.");
     }
 
     // TODO cellEntered
     public void cellEntered(int col, int row) {
-        main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] entered.");
+        //main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] entered.");
         customCells[col][row].setColor(Color.rgb(200,200,200));
     }
 
     //TODO cellExited
     public void cellExited(int col, int row){
-        main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] exited.");
+        //main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] exited.");
         customCells[col][row].applyDefaultColor();
     }
 
