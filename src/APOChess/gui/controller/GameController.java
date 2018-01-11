@@ -1,8 +1,7 @@
 package APOChess.gui.controller;
 
 import APOChess.Main;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import APOChess.gui.custom.CustomCell;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
@@ -13,6 +12,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class GameController extends MainController {
 
@@ -22,7 +22,7 @@ public class GameController extends MainController {
     @FXML
     private AnchorPane anchorID;
 
-//    private
+    private CustomCell[][] customCells;
 
     public GameController(Main main) {
         super(main);
@@ -31,6 +31,7 @@ public class GameController extends MainController {
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
+        customCells = new CustomCell[8][8];
         int size = 8;
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
@@ -40,13 +41,10 @@ public class GameController extends MainController {
                 else color = Color.rgb(205, 133, 63);
                 square.setFill(color);
 
-                gridID.add(square, col, row);
-
                 ImageView imgv = new ImageView(new Image(getClass()
                         .getResourceAsStream("../../res/" + main.getChessboard().getBoard()[col][row].getPiece().getImage())));
-//                imgv.setOnMouseClicked(event -> {
-//                    imageView.setStyle("-fx-image: url(\""+ IMAGE2 + "\");");
-//                });
+
+                gridID.add(square, col, row);
                 gridID.add(imgv, col, row);
                 square.widthProperty().bind(gridID.widthProperty().divide(size));
                 square.heightProperty().bind(gridID.heightProperty().divide(size));
@@ -54,6 +52,16 @@ public class GameController extends MainController {
                 imgv.fitWidthProperty().bind(gridID.widthProperty().divide(size));
                 imgv.fitHeightProperty().bind(gridID.heightProperty().divide(size));
 
+                int finalCol = col;
+                int finalRow = row;
+                imgv.setOnMouseEntered(event -> cellEntered(finalCol, finalRow));
+                square.setOnMouseEntered(event -> cellEntered(finalCol, finalRow));
+                imgv.setOnMouseClicked(event -> cellClicked(finalCol, finalRow));
+                square.setOnMouseClicked(event -> cellClicked(finalCol, finalRow));
+                imgv.setOnMouseExited(event -> cellExited(finalCol, finalRow));
+                square.setOnMouseExited(event -> cellExited(finalCol, finalRow));
+
+                customCells[col][row] = new CustomCell(col, row, square, color, imgv);
             }
         }
 
@@ -62,6 +70,9 @@ public class GameController extends MainController {
 
     }
 
+    /**
+     * Auto resize grid with ratio
+     */
     public void resizeGrid(){
         if(anchorID.getWidth() > anchorID.getHeight()){
             AnchorPane.setLeftAnchor(gridID, (anchorID.getWidth() - anchorID.getHeight())/2);
@@ -72,6 +83,28 @@ public class GameController extends MainController {
         }
     }
 
+    // TODO cellClicked
+    public void cellClicked(int col, int row){
+        customCells[col][row].setColor(Color.BLACK);
+        main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] clicked.");
+    }
+
+    // TODO cellEntered
+    public void cellEntered(int col, int row) {
+        main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] entered.");
+        customCells[col][row].setColor(Color.rgb(200,200,200));
+    }
+
+    //TODO cellExited
+    public void cellExited(int col, int row){
+        main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] exited.");
+        customCells[col][row].applyDefaultColor();
+    }
+
+    /**
+     * Show menu window.
+     * @param event
+     */
     @FXML
     public void showMenu(ActionEvent event){
         main.showMenu();
