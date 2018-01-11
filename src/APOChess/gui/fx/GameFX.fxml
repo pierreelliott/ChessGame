@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -33,6 +34,8 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
                </rowConstraints>
                <columnConstraints>
                   <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
@@ -43,7 +46,139 @@
                   <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                </columnConstraints>
+               <children>
+                  <Label text="a" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font></Label>
+                  <Label text="b" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                   <font>
+                       <Font name="System Bold" size="18.0" />
+                   </font></Label>
+                  <Label text="c" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="18.0" />
+                </font></Label>
+                  <Label text="d" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="e" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="f" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="g" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="h" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="8" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="7" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="6" GridPane.rowIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="5" GridPane.rowIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="4" GridPane.rowIndex="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="3" GridPane.rowIndex="6" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="2" GridPane.rowIndex="7" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="1" GridPane.rowIndex="8" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="a" GridPane.columnIndex="1" GridPane.rowIndex="9" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="b" GridPane.columnIndex="2" GridPane.rowIndex="9" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="c" GridPane.columnIndex="3" GridPane.rowIndex="9" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="d" GridPane.columnIndex="4" GridPane.rowIndex="9" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="e" GridPane.columnIndex="5" GridPane.rowIndex="9" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="f" GridPane.columnIndex="6" GridPane.rowIndex="9" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="g" GridPane.columnIndex="7" GridPane.rowIndex="9" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="h" GridPane.columnIndex="8" GridPane.rowIndex="9" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="1" GridPane.columnIndex="9" GridPane.rowIndex="8" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="2" GridPane.columnIndex="9" GridPane.rowIndex="7" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="3" GridPane.columnIndex="9" GridPane.rowIndex="6" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="4" GridPane.columnIndex="9" GridPane.rowIndex="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="5" GridPane.columnIndex="9" GridPane.rowIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="6" GridPane.columnIndex="9" GridPane.rowIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="7" GridPane.columnIndex="9" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+                  <Label text="8" GridPane.columnIndex="9" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+                      <font>
+                          <Font name="System Bold" size="18.0" />
+                      </font></Label>
+               </children>
             </GridPane>
          </children>
       </AnchorPane>

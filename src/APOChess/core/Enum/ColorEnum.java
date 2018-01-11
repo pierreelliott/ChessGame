@@ -1,8 +1,5 @@
 package APOChess.core.Enum;
 
-/**
- * Created by tancou on 1/11/2018.
- */
 public enum ColorEnum {
 
     WHITE("White"), BLACK("Black"), EMPTY("");

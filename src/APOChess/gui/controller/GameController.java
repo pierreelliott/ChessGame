@@ -44,13 +44,13 @@ public class GameController extends MainController {
                 ImageView imgv = new ImageView(new Image(getClass()
                         .getResourceAsStream("../../res/" + main.getChessboard().getBoard()[col][row].getPiece().getImage())));
 
-                gridID.add(square, col, row);
-                gridID.add(imgv, col, row);
-                square.widthProperty().bind(gridID.widthProperty().divide(size));
-                square.heightProperty().bind(gridID.heightProperty().divide(size));
+                gridID.add(square, col+1, row+1);
+                gridID.add(imgv, col+1, row+1);
+                square.widthProperty().bind(gridID.widthProperty().divide(size+2));
+                square.heightProperty().bind(gridID.heightProperty().divide(size+2));
 
-                imgv.fitWidthProperty().bind(gridID.widthProperty().divide(size));
-                imgv.fitHeightProperty().bind(gridID.heightProperty().divide(size));
+                imgv.fitWidthProperty().bind(gridID.widthProperty().divide(size+2));
+                imgv.fitHeightProperty().bind(gridID.heightProperty().divide(size+2));
 
                 int finalCol = col;
                 int finalRow = row;
