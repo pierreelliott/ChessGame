@@ -15,25 +15,14 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class GameController extends MainController {
-    @FXML
-    VBox vBoxID;
 
     @FXML
-    GridPane gridID;
+    private GridPane gridID;
 
     @FXML
-    AnchorPane anchorID;
+    private AnchorPane anchorID;
 
-    @FXML
-    BorderPane borderPane;
-    @FXML
-    Pane paneTop;
-    @FXML
-    Pane paneLeft;
-    @FXML
-    Pane paneBottom;
-    @FXML
-    Pane paneRight;
+//    private
 
     public GameController(Main main) {
         super(main);
@@ -47,14 +36,17 @@ public class GameController extends MainController {
             for (int col = 0; col < size; col++) {
                 Rectangle square = new Rectangle();
                 Color color;
-                if ((row + col) % 2 == 0) color = Color.WHITE;
-                else color = Color.BLACK;
+                if ((row + col) % 2 == 0) color = Color.rgb(255, 206, 158);
+                else color = Color.rgb(205, 133, 63);
                 square.setFill(color);
 
                 gridID.add(square, col, row);
 
                 ImageView imgv = new ImageView(new Image(getClass()
-                        .getResourceAsStream("../../res/BlackBishop.png")));
+                        .getResourceAsStream("../../res/" + main.getChessboard().getBoard()[col][row].getPiece().getImage())));
+//                imgv.setOnMouseClicked(event -> {
+//                    imageView.setStyle("-fx-image: url(\""+ IMAGE2 + "\");");
+//                });
                 gridID.add(imgv, col, row);
                 square.widthProperty().bind(gridID.widthProperty().divide(size));
                 square.heightProperty().bind(gridID.heightProperty().divide(size));
@@ -65,16 +57,8 @@ public class GameController extends MainController {
             }
         }
 
-        anchorID.widthProperty().addListener(new ChangeListener<Number>() {
-            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-                resizeGrid();
-            }
-        });
-        anchorID.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-                resizeGrid();
-            }
-        });
+        anchorID.widthProperty().addListener((observableValue, oldSceneWidth, newSceneWidth) -> resizeGrid());
+        anchorID.heightProperty().addListener((observableValue, oldSceneHeight, newSceneHeight) -> resizeGrid());
 
     }
 
@@ -86,8 +70,6 @@ public class GameController extends MainController {
             AnchorPane.setTopAnchor(gridID, (anchorID.getHeight() - anchorID.getWidth())/2);
             AnchorPane.setBottomAnchor(gridID, (anchorID.getHeight() - anchorID.getWidth())/2);
         }
-
-        System.out.println("Width: " + anchorID.getWidth() + "Height: " + anchorID.getHeight());
     }
 
     @FXML

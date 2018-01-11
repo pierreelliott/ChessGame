@@ -1,5 +1,6 @@
 package APOChess;
 
+import APOChess.core.Game.Chessboard;
 import APOChess.gui.controller.GameController;
 import APOChess.gui.controller.MenuController;
 import javafx.application.Application;
@@ -20,6 +21,7 @@ public class Main extends Application {
     public Logger logger = Logger.getLogger(getClass().getName());
     private Stage menu;
     private Stage game;
+    private Chessboard chessboard;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -48,6 +50,8 @@ public class Main extends Application {
     public void newGame(boolean solo){
         menu.hide();
 
+        chessboard = new Chessboard();
+        chessboard.initialize();
 
         GridPane root = new GridPane();
         final int size = 8;
@@ -97,5 +101,9 @@ public class Main extends Application {
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
         }
+    }
+
+    public Chessboard getChessboard(){
+        return chessboard;
     }
 }

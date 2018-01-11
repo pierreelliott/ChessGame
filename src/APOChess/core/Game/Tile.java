@@ -1,5 +1,6 @@
 package APOChess.core.Game;
 
+import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Pieces.*;
 
 public class Tile {
@@ -12,7 +13,7 @@ public class Tile {
      * Empty constructor
      */
     public Tile() {
-        this.piece = null;
+        this.piece = new PieceEmpty();
     }
     
     /**
@@ -45,14 +46,14 @@ public class Tile {
      */
     public boolean isOccuped()
     {
-        return (this.piece != null);	
+        return !(this.piece instanceof PieceEmpty);
     }
     
     /**
      * Get the color of the chess piece on the tile
      * @return The color of the chess piece on the Tile or null if there's none
      */
-    public String getColor() {
-        return (this.piece != null) ? this.piece.getColor() : null;
+    public ColorEnum getColor() {
+        return this.piece.getColor();
     }
 }

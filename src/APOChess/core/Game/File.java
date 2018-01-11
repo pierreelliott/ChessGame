@@ -1,5 +1,6 @@
 package APOChess.core.Game;
 
+import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Pieces.*;
 
 import java.io.BufferedReader;
@@ -86,7 +87,7 @@ public class File {
         for (i = 0; i < length; i++) {
             line = white.get(i).split("\t");
             line[1] = line[1].split("\n")[0];
-            addPiece(createPiece(line[0], "white"), line[1]);
+            addPiece(createPiece(line[0], ColorEnum.WHITE), line[1]);
         }
         if(piecesCounter != 112228) {
             throw new Exception("Error number of chess pieces");
@@ -97,7 +98,7 @@ public class File {
         for (i = 0; i < length; i++) {
             line = black.get(i).split("\t");
             line[1] = line[1].split("\n")[0];
-            addPiece(createPiece(line[0], "black"), line[1]);
+            addPiece(createPiece(line[0], ColorEnum.WHITE), line[1]);
         }
         if(piecesCounter != 112228) {
             throw new Exception("Error number of chess pieces");
@@ -146,17 +147,17 @@ public class File {
     /**
      * Create a chess piece parsing the type parameter
      * @param type A string containing type's character(s) (one or two) of the chess piece
-     * @param color A string containing the color of the chess piece
+     * @param color A ColorEnum containing the color of the chess piece
      * @return Returns the piece created with the previous parameters
      * @throws Exception If the piece isn't initialized before return, the file contains an error, which this method doesn't handle
      */
-    private Piece createPiece(String type, String color) throws Exception {
+    private Piece createPiece(String type, ColorEnum color) throws Exception {
         Piece piece = null;
 
         if(type.length() > 1) {
             if (type.matches("k.")) {
-                /* If the type of the piece is 'k' followed by a number, it means it is a Knight
-                 * So we change its type to be a unique letter (different from the King's one) */
+                /* If the type of the piece is 'k' followed by a number, it means it is a PieceKnight
+                 * So we change its type to be a unique letter (different from the PieceKing's one) */
                 type = "n";
             } else {
                 type = type.substring(0,1);
@@ -166,27 +167,27 @@ public class File {
         /* Create the piece depending of the type of the piece */
         switch (type) {
             case "p":
-                piece = new Pawn(color);
+                piece = new PiecePawn(color);
                 piecesCounter += 1;
                 break;
             case "t":
-                piece = new Rook(color);
+                piece = new PieceRook(color);
                 piecesCounter += 10;
                 break;
             case "n":
-                piece = new Knight(color);
+                piece = new PieceKnight(color);
                 piecesCounter += 100;
                 break;
             case "b":
-                piece = new Bishop(color);
+                piece = new PieceBishop(color);
                 piecesCounter += 1000;
                 break;
             case "k":
-                piece = new King(color);
+                piece = new PieceKing(color);
                 piecesCounter += 10000;
                 break;
             case "q":
-                piece = new Queen(color);
+                piece = new PieceQueen(color);
                 piecesCounter += 100000;
                 break;
         }

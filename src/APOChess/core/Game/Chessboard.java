@@ -1,8 +1,10 @@
 package APOChess.core.Game;
 
+import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Pieces.*;
 
 public class Chessboard {
+
     private Tile[][] board;
 
     public Chessboard() {
@@ -19,22 +21,33 @@ public class Chessboard {
      * Initialize the board for a new game, positioning the black pieces to the upper side (line number = 7) and the white pieces to the lower side
      */
     public void initialize() {
-        int line = 7;
-        for (String color = "black"; !color.equalsIgnoreCase("white"); color = "white", line = 0){
-            this.board[0][line].setPiece(new Rook(color));
-            this.board[1][line].setPiece(new Knight(color));
-            this.board[2][line].setPiece(new Bishop(color));
-            this.board[3][line].setPiece(new Queen(color));
-            this.board[4][line].setPiece(new King(color));
-            this.board[5][line].setPiece(new Bishop(color));
-            this.board[6][line].setPiece(new Knight(color));
-            this.board[7][line].setPiece(new Rook(color));
-
-            line += color.equals("black") ? -1 : 1;
-
-            for (int i = 0; i < 8; i++){
-                this.board[i][line].setPiece(new Pawn(color));
-            }
+        int line = 0;
+        ColorEnum color = ColorEnum.BLACK;
+        this.board[0][line].setPiece(new PieceRook(color));
+        this.board[1][line].setPiece(new PieceKnight(color));
+        this.board[2][line].setPiece(new PieceBishop(color));
+        this.board[3][line].setPiece(new PieceQueen(color));
+        this.board[4][line].setPiece(new PieceKing(color));
+        this.board[5][line].setPiece(new PieceBishop(color));
+        this.board[6][line].setPiece(new PieceKnight(color));
+        this.board[7][line].setPiece(new PieceRook(color));
+        line = 1;
+        for (int i = 0; i < 8; i++){
+            this.board[i][line].setPiece(new PiecePawn(color));
+        }
+        line = 7;
+        color = ColorEnum.WHITE;
+        this.board[0][line].setPiece(new PieceRook(color));
+        this.board[1][line].setPiece(new PieceKnight(color));
+        this.board[2][line].setPiece(new PieceBishop(color));
+        this.board[3][line].setPiece(new PieceQueen(color));
+        this.board[4][line].setPiece(new PieceKing(color));
+        this.board[5][line].setPiece(new PieceBishop(color));
+        this.board[6][line].setPiece(new PieceKnight(color));
+        this.board[7][line].setPiece(new PieceRook(color));
+        line = 6;
+        for (int i = 0; i < 8; i++){
+            this.board[i][line].setPiece(new PiecePawn(color));
         }
     }
 
@@ -53,5 +66,9 @@ public class Chessboard {
         }
 
         configFile = null;
+    }
+
+    public Tile[][] getBoard(){
+        return board;
     }
 }

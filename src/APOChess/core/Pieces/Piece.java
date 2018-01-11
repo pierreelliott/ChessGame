@@ -1,19 +1,20 @@
 package APOChess.core.Pieces;
 
+import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Game.Move;
 
 public abstract class Piece {
-    private String color;
-    private String type;
-    private String code;
+    protected ColorEnum color;
+    protected String type;
+    protected String code;
 
-    public Piece(String color, String type) {
+    public Piece(ColorEnum color, String type) {
         this.color = color;
         this.type = type.toUpperCase();
         this.code = type.substring(0,1).toUpperCase();
     }
 
-    public String getColor() {
+    public ColorEnum getColor() {
         return color;
     }
 
@@ -23,6 +24,10 @@ public abstract class Piece {
 
     public String getCode() {
         return code;
+    }
+
+    public String getImage(){
+        return color.getString() + type + ".png";
     }
 
     //TODO Décommenter et implémenter pour chacune des classes
