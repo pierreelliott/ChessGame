@@ -27,9 +27,11 @@ public class Tile {
     /**
      * Set the tile's piece
      * @param piece The piece to put on the tile
+     * @return Tile
      */
-    public void setPiece(Piece piece) {
+    public Tile setPiece(Piece piece) {
         this.piece = piece;
+        return this;
     }
     
     /**
@@ -38,6 +40,15 @@ public class Tile {
      */
     public Piece getPiece() {
         return this.piece;
+    }
+
+    /**
+     * Reset the piece to a EmptyPiece
+     * @return Tile
+     */
+    public Tile resetPiece(){
+        this.piece = new PieceEmpty();
+        return this;
     }
     
     /**
@@ -49,11 +60,11 @@ public class Tile {
         return !(this.piece instanceof PieceEmpty);
     }
     
-    /**
-     * Get the color of the chess piece on the tile
-     * @return The color of the chess piece on the Tile or null if there's none
-     */
-    public ColorEnum getColor() {
-        return this.piece.getColor();
-    }
+//    /**
+//     * Get the color of the chess piece on the tile
+//     * @return The color of the chess piece on the Tile or null if there's none
+//     */
+//    public ColorEnum getColor() {
+//        return this.piece.getColor();
+//    }
 }

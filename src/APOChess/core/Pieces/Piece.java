@@ -18,22 +18,40 @@ public abstract class Piece {
         this.code = type.substring(0,1).toUpperCase();
     }
 
+    /**
+     * Color getter
+     * @return ColorEnum
+     */
     public ColorEnum getColor() {
         return color;
     }
 
+    /**
+     * Type name
+     * @return String
+     */
     public String getType() {
         return type;
     }
 
+    //FIXME A quoi sert cette fonction ?
     public String getCode() {
         return code;
     }
 
+    /**
+     * File name for the image
+     * @return String
+     */
     public String getImage(){
         return color.getString() + type + ".png";
     }
 
-    //TODO Décommenter et implémenter pour chacune des classes
+    /**
+     * Return a list of positions where the piece can be moved.
+     * @param position Position of the Piece on the grid
+     * @param chessboard Chessboard for viewing other pieces
+     * @return ArrayList<Position>
+     */
     public abstract ArrayList<Position> getPossibleMoves(Position position, Chessboard chessboard);
 }

@@ -18,11 +18,31 @@ import java.util.logging.Logger;
 
 public class Main extends Application {
 
+    /**
+     * Logger for debugging and log
+     */
     public Logger logger = Logger.getLogger(getClass().getName());
+
+    /**
+     * Menu window config
+     */
     private Stage menu;
+
+    /**
+     * Game window condif
+     */
     private Stage game;
+
+    /**
+     * Core of the game
+     */
     private Chessboard chessboard;
 
+    /**
+     * Initalize first window
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -38,15 +58,22 @@ public class Main extends Application {
         launch(args);
     }
 
+    /**
+     * Show Menu Window
+     */
     public void showMenu(){
         menu.show();
         game.hide();
     }
 
-    public void loadGame(){
+    public void loadGame(){ //TODO
 
     }
 
+    /**
+     * Show New Game windows
+     * @param solo
+     */
     public void newGame(boolean solo){
         menu.hide();
 
@@ -59,25 +86,9 @@ public class Main extends Application {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("gui/fx/GameFX.fxml"));
-        /*
-         * if "fx:controller" is not set in fxml
-         * fxmlLoader.setController(NewWindowController);
-         */
+
             fxmlLoader.setController(new GameController(this));
             Scene scene = new Scene(fxmlLoader.load(), 600, 400);
-
-//            scene.widthProperty().addListener(new ChangeListener<Number>() {
-//                @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-//                    System.out.println("Width: " + newSceneWidth);
-//
-//                }
-//            });
-//            scene.heightProperty().addListener(new ChangeListener<Number>() {
-//                @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-//                    System.out.println("Height: " + newSceneHeight);
-//                }
-//            });
-
 
             game = new Stage();
             game.setTitle("APO Chess APOChess.core.Game");
@@ -88,11 +99,13 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Show About Window
+     */
     public void showAbout(){
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("gui/fx/AboutFX.fxml"));
-            //fxmlLoader.setController(new GameController(this));
             Scene scene = new Scene(fxmlLoader.load(), 450, 275);
             Stage stage = new Stage();
             stage.setTitle("APO Chess About");

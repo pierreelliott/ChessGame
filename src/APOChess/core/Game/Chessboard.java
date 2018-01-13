@@ -9,7 +9,14 @@ import java.util.logging.Level;
 
 public class Chessboard {
 
+    /**
+     * The board
+     */
     private Tile[][] board;
+
+    /**
+     * Main pointer
+     */
     private Main main;
 
     public Chessboard(Main main) {
@@ -74,24 +81,56 @@ public class Chessboard {
         configFile = null;
     }
 
+    /**
+     * Get the Tile at a positon
+     * @param p The position of the Tile
+     * @return Tile
+     */
+    public Tile getTile(Position p){
+        return getTile(p.getPosX(), p.getPosY());
+    }
+
+    /**
+     * Get the Tile at a position expressed by columns and rows
+     * @param col Columns
+     * @param row Row
+     * @return Tile
+     */
     public Tile getTile(int col, int row){
         return board[col][row];
     }
 
+    /**
+     * <em>True</em> if there is a Piece not empty a the position
+     * @param position Position The Position of the Piece
+     * @return bool
+     */
     public boolean isOccuped(Position position){
         main.logger.log(Level.INFO, "Position isOccuped " + position.toString());
         return board[position.getPosX()][position.getPosY()].isOccuped();
     }
 
+    /**
+     * <em>True</em> if the position is on the grid.
+     * @param position Position
+     * @return bool
+     */
     public boolean isOnGrid(Position position){
         return position.getPosX() >= 0 && position.getPosX() < 8 && position.getPosY() >= 0 && position.getPosY() < 8;
     }
 
+    /**
+     * Return a list of positions where the piece can be moved.
+     * Need the position of the piece picked.
+     * @param col Grid's colomn where is placed the piece.
+     * @param row Grdi's row where is placed the piece.
+     * @return ArrayList<Position>
+     */
     public ArrayList<Position> getAvailableMoves(int col, int row){
         ArrayList<Position> positions = new ArrayList<>();
 
         if(!isOnGrid(new Position(col, row))){
-            main.logger.log(Level.INFO, "Not on grid " + (new Position(col, row)).toString());
+            main.logger.log(Level.WARNING, "Not on grid " + (new Position(col, row)).toString());
             return positions;
         }
 

@@ -17,11 +17,14 @@ public class CustomCell {
 
     private ImageView imageView;
 
+    private Color color;
+
     public CustomCell(int col, int row, Rectangle rectangle, Color defaultColor, ImageView imageView){
         this.col = col;
         this.row = row;
         this.rectangle = rectangle;
         this.defaultColor = defaultColor;
+        this.color = defaultColor;
         this.imageView = imageView;
     }
 
@@ -33,16 +36,25 @@ public class CustomCell {
         return row;
     }
 
-    public void applyDefaultColor(){
+    public void setDefaultColor(){
         rectangle.setFill(defaultColor);
+        color = defaultColor;
     }
 
-    public void setColor(Color c) {
+    public CustomCell setColor(Color c) {
         rectangle.setFill(c);
+        color = c;
+        return this;
     }
 
-    public void setImage(String s){
-        imageView.setImage(new Image(getClass()
-                .getResourceAsStream("../../res/" + s)));
+    public CustomCell setImage(String s){
+        imageView.setImage(
+                new Image(
+                        getClass().getResourceAsStream("../../res/" + s)));
+        return this;
+    }
+
+    public Color getColor() {
+        return color;
     }
 }
