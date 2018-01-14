@@ -10,7 +10,7 @@ public enum ColorEnum {
     }
 
     /**
-     * @return ID de l'Enum
+     * @return String name
      */
     public String getString() {
         return this.value;
@@ -18,7 +18,7 @@ public enum ColorEnum {
 
 
     /**
-     * Retourne l'Enum correspondant a l'ID
+     * Get Enum from name
      * @param s ID
      * @return Enum
      */

@@ -1,6 +1,7 @@
 package APOChess.core.Pieces;
 
 import APOChess.core.Enum.ColorEnum;
+import APOChess.core.Enum.TypeEnum;
 import APOChess.core.Game.Chessboard;
 import APOChess.core.Game.Position;
 
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 
 public class PieceQueen extends Piece {
     public PieceQueen(ColorEnum color) {
-        super(color, "Queen");
+        super(color, TypeEnum.QUEEN);
     }
 
     @Override

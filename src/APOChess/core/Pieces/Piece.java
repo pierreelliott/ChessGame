@@ -1,21 +1,22 @@
 package APOChess.core.Pieces;
 
 import APOChess.core.Enum.ColorEnum;
+import APOChess.core.Enum.TypeEnum;
 import APOChess.core.Game.Chessboard;
 import APOChess.core.Game.Position;
-import APOChess.core.Game.Tile;
 
 import java.util.ArrayList;
 
 public abstract class Piece {
     protected ColorEnum color;
-    protected String type;
-    protected String code;
+    protected TypeEnum type;
+//    protected String code;
+    protected boolean moved = false;
 
-    public Piece(ColorEnum color, String type) {
+    public Piece(ColorEnum color, TypeEnum type) {
         this.color = color;
-        this.type = type.toUpperCase();
-        this.code = type.substring(0,1).toUpperCase();
+        this.type = type;
+//        this.code = type.substring(0,1).toUpperCase();
     }
 
     /**
@@ -27,24 +28,24 @@ public abstract class Piece {
     }
 
     /**
-     * Type name
-     * @return String
+     * Type enum
+     * @return TypeEnum
      */
-    public String getType() {
+    public TypeEnum getType() {
         return type;
     }
 
-    //FIXME A quoi sert cette fonction ?
-    public String getCode() {
-        return code;
-    }
+//    //FIXME A quoi sert cette fonction ?
+//    public String getCode() {
+//        return code;
+//    }
 
     /**
      * File name for the image
      * @return String
      */
     public String getImage(){
-        return color.getString() + type + ".png";
+        return color.getString() + type.toString() + ".png";
     }
 
     /**
@@ -79,5 +80,20 @@ public abstract class Piece {
             pos = new Position(pos, direction);
         }
         return positions;
+    }
+
+    /**
+     * Set the piece as has already moved at least one time.
+     */
+    public void move(){
+        moved = true;
+    }
+
+    /**
+     * <em>true</em> if the piece has already moved at least one time.
+     * @return boolean
+     */
+    public boolean hasMoved(){
+        return moved;
     }
 }

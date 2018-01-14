@@ -1,6 +1,7 @@
 package APOChess.core.Pieces;
 
 import APOChess.core.Enum.ColorEnum;
+import APOChess.core.Enum.TypeEnum;
 import APOChess.core.Game.Chessboard;
 import APOChess.core.Game.Position;
 
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 
 public class PiecePawn extends Piece {
     public PiecePawn(ColorEnum color) {
-        super(color, "Pawn");
+        super(color, TypeEnum.PAWN);
     }
 
     @Override
@@ -43,9 +44,9 @@ public class PiecePawn extends Piece {
             }
 
         if(
-            firstMoveToward &&
-            (position.getPosY() == 6 && color == ColorEnum.WHITE) ||
-            (position.getPosY() == 1 && color == ColorEnum.BLACK)
+            firstMoveToward && !moved
+//            (position.getPosY() == 6 && color == ColorEnum.WHITE) ||
+//            (position.getPosY() == 1 && color == ColorEnum.BLACK)
             ){
             if(chessboard.isOnGrid(pFront2))
                 if(chessboard.isOnGrid(pFront2))

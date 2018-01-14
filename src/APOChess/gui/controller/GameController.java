@@ -139,7 +139,12 @@ public class GameController extends MainController {
             if(customCells[col][row].getColor() == colorSelected){ // Si la case est une position valide //ENG
                 // TODO implémenter la gestion de la pièce enlevé s'il y a écrasement
                 // On met a jour la nouvelle case graphique //ENG
-            customCells[col][row]
+
+                main.getChessboard()
+                        .getTile(lastClick.getCol(), lastClick.getRow())
+                        .getPiece().move();
+
+                customCells[col][row]
                     .setImage(
                             main.getChessboard().getTile(lastClick.getCol(), lastClick.getRow())
                                     .getPiece().getImage()
@@ -165,16 +170,16 @@ public class GameController extends MainController {
             }
         }
 
-        //main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] clicked.");
+        main.logger.log(Level.FINE, "Cell ["+col+";"+row+"] clicked.");
     }
 
     private void cellEntered(int col, int row) { //TODO
-        //main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] entered.");
+        main.logger.log(Level.FINE, "Cell ["+col+";"+row+"] entered.");
         //customCells[col][row].setColor(Color.rgb(200,200,200));
     }
 
     private void cellExited(int col, int row){ //TODO
-        //main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] exited.");
+        main.logger.log(Level.FINE, "Cell ["+col+";"+row+"] exited.");
         //customCells[col][row].setDefaultColor();
     }
 
