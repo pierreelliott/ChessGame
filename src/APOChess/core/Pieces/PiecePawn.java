@@ -54,21 +54,47 @@ public class PiecePawn extends Piece {
                         positions.add(pFront2);
         }
 
-        // Avance coté ou en passant //ENG
+        // Avance coté //ENG
         Position pSide = new Position(position, pLeft);
         Position enPassantSide = new Position(position, enPassantLeft);
         for(int i = 0; i<2; i++){
             if(chessboard.isOnGrid(enPassantSide))
-                if(chessboard.isOccuped(enPassantSide)){
+                if(chessboard.isOccuped(enPassantSide))
                     if(chessboard.getTile(enPassantSide).getPiece().getColor() != color)
                         positions.add(enPassantSide);
-                } else {
-                    if(chessboard.isOnGrid(pSide)){
+            pSide = new Position(position, pRight);
+            enPassantSide = new Position(position, enPassantRight);
+        }
+
+        return positions;
+    }
+
+    @Override
+    public ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard) {
+        ArrayList<Position> positions = new ArrayList<>();
+
+        Position enPassantLeft = new Position(-1, 1);
+        Position enPassantRight = new Position(1, 1);
+        Position pLeft = new Position(-1,0);
+        Position pRight = new Position(1,0);
+
+        if(color == ColorEnum.WHITE){
+            enPassantLeft.invert();
+            enPassantRight.invert();
+            pLeft.invert();
+            pRight.invert();
+        }
+
+        // Avance coté //ENG
+        Position pSide = new Position(position, pLeft);
+        Position enPassantSide = new Position(position, enPassantLeft);
+        for(int i = 0; i<2; i++){
+            if(chessboard.isOnGrid(enPassantSide))
+                if(!chessboard.isOccuped(enPassantSide))
+                    if(chessboard.isOnGrid(pSide))
                         if(chessboard.isOccuped(pSide))
                             if(chessboard.getTile(pSide).getPiece().getColor() != color)
                                 positions.add(enPassantSide);
-                    }
-                }
             pSide = new Position(position, pRight);
             enPassantSide = new Position(position, enPassantRight);
         }

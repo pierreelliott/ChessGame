@@ -55,6 +55,13 @@ public abstract class Piece {
      * @return ArrayList<Position>
      */
     public abstract ArrayList<Position> getPossibleMoves(Position position, Chessboard chessboard);
+    /**
+     * Return a list of positions where the piece can be moved thanks to a special move.
+     * @param position Position of the Piece on the grid
+     * @param chessboard Chessboard for viewing other pieces
+     * @return ArrayList<Position>
+     */
+    public abstract ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard);
 
     /**
      * Returns a list of Position associated to a direction from a position.

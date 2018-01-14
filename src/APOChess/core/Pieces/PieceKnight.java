@@ -44,4 +44,9 @@ public class PieceKnight extends Piece {
 
         return positions;
     }
+
+    @Override
+    public ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard) {
+        return new ArrayList<>();
+    }
 }

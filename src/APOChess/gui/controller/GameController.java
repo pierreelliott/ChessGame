@@ -125,7 +125,13 @@ public class GameController extends MainController {
     private void cellClicked(int col, int row){
         Color colorSelected = Color.RED;
         if(!clicked){ // Si on a pas sélectionné de pions //ENG
-            ArrayList<Position> positions = main.getChessboard().getAvailableMoves(col, row);
+            ArrayList<Position> standardMoves = main.getChessboard().getAvailableMoves(col, row);
+            ArrayList<Position> specialMoves = main.getChessboard().getSpecialeMoves(col, row);
+
+            ArrayList<Position> positions = new ArrayList<>();
+            positions.addAll(standardMoves);
+            positions.addAll(specialMoves);
+
             if(!positions.isEmpty()){
                 clicked = true;
                 lastClick = customCells[col][row];
@@ -138,12 +144,13 @@ public class GameController extends MainController {
             Color debugColor = customCells[col][row].getColor();
             if(customCells[col][row].getColor() == colorSelected){ // Si la case est une position valide //ENG
                 // TODO implémenter la gestion de la pièce enlevé s'il y a écrasement
-                // On met a jour la nouvelle case graphique //ENG
 
+                // On marque la pièce comme étant déplacée.
                 main.getChessboard()
                         .getTile(lastClick.getCol(), lastClick.getRow())
                         .getPiece().move();
 
+                // On met a jour la nouvelle case graphique //ENG
                 customCells[col][row]
                     .setImage(
                             main.getChessboard().getTile(lastClick.getCol(), lastClick.getRow())

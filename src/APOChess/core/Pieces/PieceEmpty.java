@@ -21,4 +21,9 @@ public class PieceEmpty extends Piece {
     public ArrayList<Position> getPossibleMoves(Position position, Chessboard chessboard) {
         return new ArrayList<>();
     }
+
+    @Override
+    public ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard) {
+        return new ArrayList<>();
+    }
 }

@@ -30,23 +30,15 @@ public class PieceKing extends Piece {
                         positions.add(pos);
             }
         }
-
-        // Castling : Special move
-        if(!moved){
-            positions.addAll(getCastlingMoves(position, chessboard));
-        }
         return positions;
     }
 
-    /**
-     * Special move Castling.
-     * Returns a list of positons valides for that move.
-     * @param position Position of the Piece
-     * @param chessboard Chessboard for viewing other pieces
-     * @return ArrayList<Position>
-     */
-    private ArrayList<Position> getCastlingMoves(Position position, Chessboard chessboard){
+    @Override
+    public ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard) {
         ArrayList<Position> positions = new ArrayList<>();
+
+        if(moved)
+            return positions;
 
         Position posR1 = new Position(1,0);
         Position posR2 = new Position(2,0);

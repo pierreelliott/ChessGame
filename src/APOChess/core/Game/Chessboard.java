@@ -141,4 +141,23 @@ public class Chessboard {
         positions = board[col][row].getPiece().getPossibleMoves(new Position(col, row), this);
         return positions;
     }
+
+    /**
+     * Return a list of positions where the piece can be moved thanks to special moves.
+     * Need the position of the piece picked.
+     * @param col Grid's colomn where is placed the piece.
+     * @param row Grdi's row where is placed the piece.
+     * @return ArrayList<Position>
+     */
+    public ArrayList<Position> getSpecialeMoves(int col, int row){
+        ArrayList<Position> positions = new ArrayList<>();
+
+        if(!isOnGrid(new Position(col, row))){
+            main.logger.log(Level.WARNING, "Not on grid " + (new Position(col, row)).toString());
+            return positions;
+        }
+
+        positions = board[col][row].getPiece().getSpecialMoves(new Position(col, row), this);
+        return positions;
+    }
 }
