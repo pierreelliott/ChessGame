@@ -14,6 +14,16 @@ public class PieceBishop extends Piece {
     @Override
     public ArrayList<Position> getPossibleMoves(Position position, Chessboard chessboard) {
         ArrayList<Position> positions = new ArrayList<>();
+
+        Position pTopRight = new Position(1,1);
+        Position pTopLeft = new Position(1,-1);
+
+        positions.addAll(getPosDirection(position, pTopRight, chessboard));
+        positions.addAll(getPosDirection(position, pTopLeft, chessboard));
+        positions.addAll(getPosDirection(position, pTopRight.invert(), chessboard));
+        positions.addAll(getPosDirection(position, pTopLeft.invert(), chessboard));
+
         return positions;
     }
+
 }

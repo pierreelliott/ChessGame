@@ -54,4 +54,30 @@ public abstract class Piece {
      * @return ArrayList<Position>
      */
     public abstract ArrayList<Position> getPossibleMoves(Position position, Chessboard chessboard);
+
+    /**
+     * Returns a list of Position associated to a direction from a position.
+     * @param position Position of the Piece
+     * @param direction Position. Direction to walk
+     * @param chessboard Chessboard for viewing other pieces
+     * @return ArrayList<Position>
+     */
+    protected ArrayList<Position> getPosDirection(Position position, Position direction, Chessboard chessboard){
+        ArrayList<Position> positions = new ArrayList<>();
+
+        if(direction.getPosY() == 0 && direction.getPosX() == 0)
+            return positions;
+
+        Position pos = new Position(position, direction);
+        while(chessboard.isOnGrid(pos)){
+            if(chessboard.isOccuped(pos)){
+                if(chessboard.getTile(pos).getPiece().getColor() != color)
+                    positions.add(pos);
+                break;
+            }
+            positions.add(pos);
+            pos = new Position(pos, direction);
+        }
+        return positions;
+    }
 }

@@ -13,8 +13,10 @@ public class File {
     private ArrayList<String> black;
     private Tile[][] board;
     
-    /* Used to determine if the pieces created follow chess rules (ie, 8 Pawns, 2 Rooks, ...)
-    Unities represents the number of Pawns, ... */
+    /**
+     *  Used to determine if the pieces created follow chess rules (ie, 8 Pawns, 2 Rooks, ...)
+     *  Unities represents the number of Pawns, ...
+     *  */
     private int piecesCounter;
 
     /**

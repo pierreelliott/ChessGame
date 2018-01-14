@@ -122,7 +122,6 @@ public class GameController extends MainController {
         }
     }
 
-    // TODO cellClicked
     private void cellClicked(int col, int row){
         Color colorSelected = Color.RED;
         if(!clicked){ // Si on a pas sélectionné de pions //ENG
@@ -166,17 +165,15 @@ public class GameController extends MainController {
             }
         }
 
-        main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] clicked.");
+        //main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] clicked.");
     }
 
-    // TODO cellEntered
-    private void cellEntered(int col, int row) {
+    private void cellEntered(int col, int row) { //TODO
         //main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] entered.");
         //customCells[col][row].setColor(Color.rgb(200,200,200));
     }
 
-    //TODO cellExited
-    private void cellExited(int col, int row){
+    private void cellExited(int col, int row){ //TODO
         //main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] exited.");
         //customCells[col][row].setDefaultColor();
     }

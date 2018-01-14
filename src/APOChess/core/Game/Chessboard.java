@@ -107,6 +107,10 @@ public class Chessboard {
      */
     public boolean isOccuped(Position position){
         main.logger.log(Level.INFO, "Position isOccuped " + position.toString());
+        if(!isOnGrid(position)){
+            main.logger.log(Level.SEVERE, "isOccuped tested out of the board");
+            return false;
+        }
         return board[position.getPosX()][position.getPosY()].isOccuped();
     }
 
