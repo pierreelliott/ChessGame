@@ -17,6 +17,15 @@ public enum ColorEnum {
     }
 
 
+    public static ColorEnum getOpposite(ColorEnum color) {
+        if(color.equals(ColorEnum.WHITE))
+            return ColorEnum.BLACK;
+        if(color.equals(ColorEnum.BLACK))
+            return ColorEnum.WHITE;
+
+        return ColorEnum.EMPTY;
+    }
+
     /**
      * Get Enum from name
      * @param s ID

@@ -10,13 +10,11 @@ import java.util.ArrayList;
 public abstract class Piece {
     protected ColorEnum color;
     protected TypeEnum type;
-//    protected String code;
     protected boolean moved = false;
 
     public Piece(ColorEnum color, TypeEnum type) {
         this.color = color;
         this.type = type;
-//        this.code = type.substring(0,1).toUpperCase();
     }
 
     /**
@@ -34,11 +32,6 @@ public abstract class Piece {
     public TypeEnum getType() {
         return type;
     }
-
-//    //FIXME A quoi sert cette fonction ?
-//    public String getCode() {
-//        return code;
-//    }
 
     /**
      * File name for the image

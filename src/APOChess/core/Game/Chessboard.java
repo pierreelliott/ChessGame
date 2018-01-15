@@ -126,8 +126,8 @@ public class Chessboard {
     /**
      * Return a list of positions where the piece can be moved.
      * Need the position of the piece picked.
-     * @param col Grid's colomn where is placed the piece.
-     * @param row Grdi's row where is placed the piece.
+     * @param col Grid's column where is placed the piece.
+     * @param row Grid's row where is placed the piece.
      * @return ArrayList<Position>
      */
     public ArrayList<Position> getAvailableMoves(int col, int row){

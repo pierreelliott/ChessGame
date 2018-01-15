@@ -32,12 +32,15 @@ public class PieceKnight extends Piece {
         for(int i = 0; i<2; i++){
             for (Position posV : posToTest) {
                 pos = new Position(position, posV);
-                if(chessboard.isOnGrid(pos))
-                    if(chessboard.isOccuped(pos)) {
-                        if (chessboard.getTile(pos).getPiece().getColor() != color)
+                if(chessboard.isOnGrid(pos)) {
+                    if (chessboard.isOccuped(pos)) {
+                        if (chessboard.getTile(pos).getPiece().getColor() != color) {
                             positions.add(pos);
-                    } else
+                        }
+                    } else {
                         positions.add(pos);
+                    }
+                }
                 posV.invert();
             }
         }

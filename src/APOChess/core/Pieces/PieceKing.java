@@ -19,15 +19,19 @@ public class PieceKing extends Piece {
         Position pos;
         for(int i = -1; i<=1; i++){
             for(int j = -1; j<= 1; j++){
-                if(i == 0 && j == 0)
+                if(i == 0 && j == 0) {
                     continue;
+                }
                 pos = new Position(position, new Position(i,j));
-                if(chessboard.isOnGrid(pos))
-                    if(chessboard.isOccuped(pos)) {
-                        if (chessboard.getTile(pos).getPiece().getColor() != color)
+                if(chessboard.isOnGrid(pos)) {
+                    if (chessboard.isOccuped(pos)) {
+                        if (chessboard.getTile(pos).getPiece().getColor() != color) {
                             positions.add(pos);
-                    } else
+                        }
+                    } else {
                         positions.add(pos);
+                    }
+                }
             }
         }
         return positions;
@@ -37,8 +41,9 @@ public class PieceKing extends Piece {
     public ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard) {
         ArrayList<Position> positions = new ArrayList<>();
 
-        if(moved)
+        if(moved) {
             return positions;
+        }
 
         Position posR1 = new Position(1,0);
         Position posR2 = new Position(2,0);
@@ -64,26 +69,31 @@ public class PieceKing extends Piece {
         posEmpty.add( posL3);
 
         // Check first condition : no other piece.
-        for (Position pos : posEmpty)
-            if(chessboard.isOnGrid(pos))
-                if(chessboard.isOccuped(pos))
+        for (Position pos : posEmpty) {
+            if(chessboard.isOnGrid(pos)) {
+                if(chessboard.isOccuped(pos)) {
                     return positions;
+                }
+            }
+        }
 
         // Check second condition : There is a rook
-        if(chessboard.isOnGrid(posRRook1))
-            if(chessboard.isOccuped(posRRook1)){
-                if(chessboard.getTile(posRRook1).getPiece().type == TypeEnum.ROOK &&
-                        !chessboard.getTile(posRRook1).getPiece().hasMoved()){
+        if(chessboard.isOnGrid(posRRook1)) {
+            if (chessboard.isOccuped(posRRook1)) {
+                if (chessboard.getTile(posRRook1).getPiece().type == TypeEnum.ROOK &&
+                        !chessboard.getTile(posRRook1).getPiece().hasMoved()) {
                     positions.add(posR2);
                 }
             }
-        if(chessboard.isOnGrid(posRRook2))
-            if(chessboard.isOccuped(posRRook2)){
-                if(chessboard.getTile(posRRook2).getPiece().type == TypeEnum.ROOK &&
-                        !chessboard.getTile(posRRook2).getPiece().hasMoved()){
+        }
+        if(chessboard.isOnGrid(posRRook2)) {
+            if (chessboard.isOccuped(posRRook2)) {
+                if (chessboard.getTile(posRRook2).getPiece().type == TypeEnum.ROOK &&
+                        !chessboard.getTile(posRRook2).getPiece().hasMoved()) {
                     positions.add(posL2);
                 }
             }
+        }
 
         return positions;
     }

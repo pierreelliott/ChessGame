@@ -89,12 +89,17 @@ public class PiecePawn extends Piece {
         Position pSide = new Position(position, pLeft);
         Position enPassantSide = new Position(position, enPassantLeft);
         for(int i = 0; i<2; i++){
-            if(chessboard.isOnGrid(enPassantSide))
-                if(!chessboard.isOccuped(enPassantSide))
-                    if(chessboard.isOnGrid(pSide))
-                        if(chessboard.isOccuped(pSide))
-                            if(chessboard.getTile(pSide).getPiece().getColor() != color)
+            if(chessboard.isOnGrid(enPassantSide)) {
+                if (!chessboard.isOccuped(enPassantSide)) {
+                    if (chessboard.isOnGrid(pSide)) {
+                        if (chessboard.isOccuped(pSide)) {
+                            if (chessboard.getTile(pSide).getPiece().getColor() != color) {
                                 positions.add(enPassantSide);
+                            }
+                        }
+                    }
+                }
+            }
             pSide = new Position(position, pRight);
             enPassantSide = new Position(position, enPassantRight);
         }

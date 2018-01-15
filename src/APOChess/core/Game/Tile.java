@@ -3,11 +3,17 @@ package APOChess.core.Game;
 import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Pieces.*;
 
+import java.util.ArrayList;
+
 public class Tile {
     /**
      * The piece currently on the tile
      */
     private Piece piece;
+    /**
+     * A list of all pieces that endanger this Tile (for the King)
+     */
+    private ArrayList<Piece> threats;
     
     /**
      * Empty constructor
@@ -50,7 +56,40 @@ public class Tile {
         this.piece = new PieceEmpty();
         return this;
     }
-    
+
+    public ArrayList<Piece> getThreats() {
+        return threats;
+    }
+
+    public void setThreats(ArrayList threats) {
+        this.threats = threats;
+    }
+
+    /**
+     *
+     * @param p
+     */
+    public void addThreat(Piece p) {
+        if(!threats.contains(p)) {
+            threats.add(p);
+        }
+    }
+
+    public void removeThreat(Piece p) {
+        if(threats.contains(p)) {
+            threats.remove(p);
+        }
+    }
+
+    public boolean isDangerous(ColorEnum color) {
+        for (Piece threat: threats) {
+            if(threat.getColor().equals(ColorEnum.getOpposite(color))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Verify if the Tile contains a piece
      * @return True if there is a piece, false otherwise
