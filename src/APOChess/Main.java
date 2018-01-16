@@ -34,11 +34,6 @@ public class Main extends Application {
     private Stage game;
 
     /**
-     * Core of the game
-     */
-    private Chessboard chessboard;
-
-    /**
      * Initalize first window
      * @param primaryStage
      * @throws Exception
@@ -77,9 +72,6 @@ public class Main extends Application {
     public void newGame(boolean solo){
         menu.hide();
 
-        chessboard = new Chessboard(this);
-        chessboard.initialize();
-
         GridPane root = new GridPane();
         final int size = 8;
 
@@ -114,9 +106,5 @@ public class Main extends Application {
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
         }
-    }
-
-    public Chessboard getChessboard(){
-        return chessboard;
     }
 }

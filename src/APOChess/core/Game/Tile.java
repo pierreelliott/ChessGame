@@ -20,6 +20,7 @@ public class Tile {
      */
     public Tile() {
         this.piece = new PieceEmpty();
+        this.threats = new ArrayList<>();
     }
     
     /**
@@ -28,6 +29,7 @@ public class Tile {
      */
     public Tile(Piece piece) {
         this.piece = piece;
+        this.threats = new ArrayList<>();
     }
 
     /**
@@ -81,7 +83,7 @@ public class Tile {
         }
     }
 
-    public boolean isDangerous(ColorEnum color) {
+    public boolean isDangerousFor(ColorEnum color) {
         for (Piece threat: threats) {
             if(threat.getColor().equals(ColorEnum.getOpposite(color))) {
                 return true;

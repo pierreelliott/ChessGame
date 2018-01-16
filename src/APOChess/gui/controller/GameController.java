@@ -1,6 +1,7 @@
 package APOChess.gui.controller;
 
 import APOChess.Main;
+import APOChess.core.Game.Game;
 import APOChess.core.Game.Position;
 import APOChess.core.Pieces.PieceEmpty;
 import APOChess.gui.custom.CustomCell;
@@ -52,8 +53,11 @@ public class GameController extends MainController {
      */
     private CustomCell lastClick;
 
+    private Game game;
+
     public GameController(Main main) {
         super(main);
+        this.game = new Game(main);
     }
 
     /**
@@ -76,7 +80,7 @@ public class GameController extends MainController {
 
                 // Creation of the image associated to the cell
                 ImageView imgv = new ImageView(new Image(getClass()
-                        .getResourceAsStream("../../res/" + main.getChessboard().getTile(col, row).getPiece().getImage())));
+                        .getResourceAsStream("../../res/" + game.getPieceImage(col, row))));
 
                 gridID.add(square, col+1, row+1);
                 gridID.add(imgv, col+1, row+1);
@@ -124,55 +128,33 @@ public class GameController extends MainController {
 
     private void cellClicked(int col, int row){
         Color colorSelected = Color.RED;
-        if(!clicked){ // Si on a pas sélectionné de pions //ENG
-            ArrayList<Position> standardMoves = main.getChessboard().getAvailableMoves(col, row);
-            ArrayList<Position> specialMoves = main.getChessboard().getSpecialeMoves(col, row);
-
-            ArrayList<Position> positions = new ArrayList<>();
-            positions.addAll(standardMoves);
-            positions.addAll(specialMoves);
-
-            if(!positions.isEmpty()){
-                clicked = true;
+        if(!game.isPieceSelected()){ // Si on a pas sélectionné de pions //ENG
+            if(game.selectPiece(col, row)) {
+                ArrayList<Position> positions = game.getMoves(col, row);
                 lastClick = customCells[col][row];
+
+                for (Position p : positions ) {
+                    customCells[p.getPosX()][p.getPosY()].setColor(colorSelected);
+                }
             }
-            for (Position p : positions ) {
-                customCells[p.getPosX()][p.getPosY()].setColor(colorSelected);
-            }
+
         } else { // Si on a déjà sélectionner un pion //ENG
-            clicked = false;
             Color debugColor = customCells[col][row].getColor();
-            if(customCells[col][row].getColor() == colorSelected){ // Si la case est une position valide //ENG
+            if(game.canMoveTo(col, row)){ // Si la case est une position valide //ENG
                 // TODO implémenter la gestion de la pièce enlevé s'il y a écrasement
 
-                // On marque la pièce comme étant déplacée.
-                main.getChessboard()
-                        .getTile(lastClick.getCol(), lastClick.getRow())
-                        .getPiece().move();
+                String pieceImage = game.getSelectedPiece().getImage(); // Need to get the image before moving anything
+                game.movePiece(col,row);
 
                 // On met a jour la nouvelle case graphique //ENG
-                customCells[col][row]
-                    .setImage(
-                            main.getChessboard().getTile(lastClick.getCol(), lastClick.getRow())
-                                    .getPiece().getImage()
-                    );
-
-                // On met a jour dans le gestionnaire du jeu //ENG
-                main.getChessboard()
-                        .getTile(col, row)
-                        .setPiece(
-                                main.getChessboard()
-                                        .getTile(lastClick.getCol(), lastClick.getRow())
-                                        .getPiece()
-                        );
+                customCells[col][row].setImage(pieceImage);
 
                 // On met a jour graphiquement l'ancienne case contenant la pièce, par du vide. //ENG
                 customCells[lastClick.getCol()][lastClick.getRow()].setImage(new PieceEmpty().getImage());
-                // On met a jour le gestionnaire du jeu. //ENG
-                main.getChessboard().getTile(lastClick.getCol(), lastClick.getRow()).resetPiece();
 
                 restoreDefaultColor();
             } else { // Si la case n'est pas une position valide //ENG
+                game.selectPiece(-1,-1); // We deselect the piece
                 restoreDefaultColor();
             }
         }
