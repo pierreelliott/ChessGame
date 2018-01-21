@@ -13,7 +13,7 @@ public class PieceKnight extends Piece {
     }
 
     @Override
-    public ArrayList<Position> getPossibleMoves(Position position, Chessboard chessboard) {
+    public ArrayList<Position> getPossibleMoves(Position position) {
         ArrayList<Position> positions = new ArrayList<>();
 
         Position pTopRight1 = new Position(2,1);
@@ -22,34 +22,30 @@ public class PieceKnight extends Piece {
         Position pBottomRight1 = new Position(-2, 1);
         Position pBottomRight2 = new Position(-1, 2);
 
-        ArrayList<Position> posToTest = new ArrayList<>();
-        posToTest.add(pTopRight1);
-        posToTest.add(pTopRight2);
-        posToTest.add(pBottomRight1);
-        posToTest.add(pBottomRight2);
+        positions.add(pTopRight1);
+        positions.add(pTopRight2);
+        positions.add(pBottomRight1);
+        positions.add(pBottomRight2);
 
-        Position pos;
-        for(int i = 0; i<2; i++){
-            for (Position posV : posToTest) {
-                pos = new Position(position, posV);
-                if(chessboard.isOnGrid(pos)) {
-                    if (chessboard.isOccuped(pos)) {
-                        if (chessboard.getTile(pos).getPiece().getColor() != color) {
-                            positions.add(pos);
-                        }
-                    } else {
-                        positions.add(pos);
-                    }
-                }
-                posV.invert();
-            }
-        }
+        positions.add(pTopRight1.invert());
+        positions.add(pTopRight2.invert());
+        positions.add(pBottomRight1.invert());
+        positions.add(pBottomRight2.invert());
 
         return positions;
     }
 
     @Override
-    public ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard) {
+    public ArrayList<Position> getSpecialMoves(Position position) {
         return new ArrayList<>();
+    }
+
+    @Override
+    public ArrayList<Position> getThreatenedTiles(Position position) {
+        ArrayList<Position> positions = new ArrayList<>();
+
+        // TODO Récupérer les positions où le cavalier peut aller bouffer des pièces adverses
+
+        return positions;
     }
 }

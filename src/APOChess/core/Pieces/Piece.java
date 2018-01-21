@@ -11,6 +11,7 @@ public abstract class Piece {
     protected ColorEnum color;
     protected TypeEnum type;
     protected boolean moved = false;
+    protected boolean canMoveToThreatenedTiles = true;
 
     public Piece(ColorEnum color, TypeEnum type) {
         this.color = color;
@@ -44,17 +45,20 @@ public abstract class Piece {
     /**
      * Return a list of positions where the piece can be moved.
      * @param position Position of the Piece on the grid
-     * @param chessboard Chessboard for viewing other pieces
      * @return ArrayList<Position>
      */
-    public abstract ArrayList<Position> getPossibleMoves(Position position, Chessboard chessboard);
+    public abstract ArrayList<Position> getPossibleMoves(Position position);
+    // TODO enlever les vérifications pour savoir si la pièce peut bouger ou non (style si la couleur est différente de la pièce actuelle)
+
     /**
      * Return a list of positions where the piece can be moved thanks to a special move.
      * @param position Position of the Piece on the grid
-     * @param chessboard Chessboard for viewing other pieces
      * @return ArrayList<Position>
      */
-    public abstract ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard);
+    public abstract ArrayList<Position> getSpecialMoves(Position position);
+    // TODO enlever les vérifications pour savoir si la pièce peut bouger ou non (style si la couleur est différente de la pièce actuelle)
+
+    public abstract ArrayList<Position> getThreatenedTiles(Position position);
 
     /**
      * Returns a list of Position associated to a direction from a position.
@@ -63,22 +67,18 @@ public abstract class Piece {
      * @param chessboard Chessboard for viewing other pieces
      * @return ArrayList<Position>
      */
-    protected ArrayList<Position> getPosDirection(Position position, Position direction, Chessboard chessboard){
+    protected ArrayList<Position> getPosDirection(Position position, Position direction){
         ArrayList<Position> positions = new ArrayList<>();
 
         if(direction.getPosY() == 0 && direction.getPosX() == 0)
             return positions;
 
         Position pos = new Position(position, direction);
-        while(chessboard.isOnGrid(pos)){
-            if(chessboard.isOccuped(pos)){
-                if(chessboard.getTile(pos).getPiece().getColor() != color)
-                    positions.add(pos);
-                break;
-            }
+        for (int i =0; i < 7; i++) {
             positions.add(pos);
             pos = new Position(pos, direction);
         }
+
         return positions;
     }
 

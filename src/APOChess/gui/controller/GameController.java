@@ -128,9 +128,9 @@ public class GameController extends MainController {
 
     private void cellClicked(int col, int row){
         Color colorSelected = Color.RED;
-        if(!game.isPieceSelected()){ // Si on a pas sélectionné de pions //ENG
+        if(!game.isPieceSelected()){ // If the player hasn't selected a piece
             if(game.selectPiece(col, row)) {
-                ArrayList<Position> positions = game.getMoves(col, row);
+                ArrayList<Position> positions = game.getMoves(game.getSelectedPiece(),col, row);
                 lastClick = customCells[col][row];
 
                 for (Position p : positions ) {
@@ -138,7 +138,7 @@ public class GameController extends MainController {
                 }
             }
 
-        } else { // Si on a déjà sélectionner un pion //ENG
+        } else { // If the player has selected a piece
             Color debugColor = customCells[col][row].getColor();
             if(game.canMoveTo(col, row)){ // Si la case est une position valide //ENG
                 // TODO implémenter la gestion de la pièce enlevé s'il y a écrasement

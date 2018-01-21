@@ -126,38 +126,64 @@ public class Chessboard {
     /**
      * Return a list of positions where the piece can be moved.
      * Need the position of the piece picked.
-     * @param col Grid's column where is placed the piece.
-     * @param row Grid's row where is placed the piece.
      * @return ArrayList<Position>
      */
-    public ArrayList<Position> getAvailableMoves(int col, int row){
+    public ArrayList<Position> getAvailableMoves(Piece piece, Position pos){
         ArrayList<Position> positions = new ArrayList<>();
 
-        if(!isOnGrid(new Position(col, row))){
-            main.logger.log(Level.WARNING, "Not on grid " + (new Position(col, row)).toString());
+        if(!isOnGrid(pos)){
+            main.logger.log(Level.WARNING, "Not on grid " + pos.toString());
             return positions;
         }
 
-        positions = board[col][row].getPiece().getPossibleMoves(new Position(col, row), this);
+        ArrayList<Position> temp = piece.getPossibleMoves(pos);
+        for (Position p: temp) {
+            if(isOnGrid(p)) {
+                positions.add(p);
+            }
+        }
+
         return positions;
     }
 
     /**
      * Return a list of positions where the piece can be moved thanks to special moves.
      * Need the position of the piece picked.
-     * @param col Grid's colomn where is placed the piece.
-     * @param row Grdi's row where is placed the piece.
      * @return ArrayList<Position>
      */
-    public ArrayList<Position> getSpecialeMoves(int col, int row){
+    public ArrayList<Position> getSpecialeMoves(Piece piece, Position pos){
         ArrayList<Position> positions = new ArrayList<>();
 
-        if(!isOnGrid(new Position(col, row))){
-            main.logger.log(Level.WARNING, "Not on grid " + (new Position(col, row)).toString());
+        if(!isOnGrid(pos)){
+            main.logger.log(Level.WARNING, "Not on grid " + pos.toString());
             return positions;
         }
 
-        positions = board[col][row].getPiece().getSpecialMoves(new Position(col, row), this);
+        ArrayList<Position> temp = piece.getSpecialMoves(pos);
+        for (Position p: temp) {
+            if(isOnGrid(p)) {
+                positions.add(p);
+            }
+        }
+
+        return positions;
+    }
+
+    public ArrayList<Position> getThreatenedTiles(Piece piece, Position pos){
+        ArrayList<Position> positions = new ArrayList<>();
+
+        if(!isOnGrid(pos)){
+            main.logger.log(Level.WARNING, "Not on grid " + pos.toString());
+            return positions;
+        }
+
+        ArrayList<Position> temp = piece.getThreatenedTiles(pos);
+        for (Position p: temp) {
+            if(isOnGrid(p)) {
+                positions.add(p);
+            }
+        }
+
         return positions;
     }
 }

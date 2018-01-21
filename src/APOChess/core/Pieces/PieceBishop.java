@@ -13,23 +13,31 @@ public class PieceBishop extends Piece {
     }
 
     @Override
-    public ArrayList<Position> getPossibleMoves(Position position, Chessboard chessboard) {
+    public ArrayList<Position> getPossibleMoves(Position position) {
         ArrayList<Position> positions = new ArrayList<>();
 
         Position pTopRight = new Position(1,1);
         Position pTopLeft = new Position(1,-1);
 
-        positions.addAll(getPosDirection(position, pTopRight, chessboard));
-        positions.addAll(getPosDirection(position, pTopLeft, chessboard));
-        positions.addAll(getPosDirection(position, pTopRight.invert(), chessboard));
-        positions.addAll(getPosDirection(position, pTopLeft.invert(), chessboard));
+        positions.addAll(getPosDirection(position, pTopRight));
+        positions.addAll(getPosDirection(position, pTopLeft));
+        positions.addAll(getPosDirection(position, pTopRight.invert()));
+        positions.addAll(getPosDirection(position, pTopLeft.invert()));
 
         return positions;
     }
 
     @Override
-    public ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard) {
+    public ArrayList<Position> getSpecialMoves(Position position) {
         return new ArrayList<>();
     }
 
+    @Override
+    public ArrayList<Position> getThreatenedTiles(Position position) {
+        ArrayList<Position> positions = new ArrayList<>();
+
+        // TODO Récupérer les positions où le fou peut aller bouffer des pièces adverses
+
+        return positions;
+    }
 }

@@ -31,13 +31,13 @@ public class Game {
         }
     }
 
-    public ArrayList<Position> getMoves(int col, int row) {
+    public ArrayList<Position> getMoves(Piece piece,int col, int row) {
         ArrayList<Position> positions = new ArrayList<>();
+        Position pos = new Position(col, row);
 
-        if (board.isOnGrid(new Position(col, row)) &&
-                board.getTile(col, row).getPiece().getColor() == playerTurn) {
-            ArrayList<Position> standardMoves = board.getAvailableMoves(col, row);
-            ArrayList<Position> specialMoves = board.getSpecialeMoves(col, row);
+        if (board.isOnGrid(new Position(col, row))) {
+            ArrayList<Position> standardMoves = board.getAvailableMoves(piece,pos);
+            ArrayList<Position> specialMoves = board.getSpecialeMoves(piece,pos);
 
             positions.addAll(standardMoves);
             positions.addAll(specialMoves);
@@ -46,8 +46,8 @@ public class Game {
         return positions;
     }
 
-    public ArrayList<Position> getMoves(Position pos) {
-        return getMoves(pos.getPosX(), pos.getPosY());
+    public ArrayList<Position> getMoves(Piece piece,Position pos) {
+        return getMoves(piece,pos.getPosX(), pos.getPosY());
     }
 
     /**
@@ -58,11 +58,13 @@ public class Game {
      * @return <em>True</em> if a piece has been selected (ie, the selection is on the board and it's the player turn), <em>False</em> otherwise
      */
     public boolean selectPiece(int col, int row) {
+        /* If the Tile selected is on the grid and the piece on it belongs to the player */
         if(board.isOnGrid(new Position(col, row)) && board.getTile(col, row).getPiece().getColor() == playerTurn) {
             selectedPiecePosition = new Position(col, row);
             pieceSelected = true;
             return pieceSelected;
         }
+        /* If the player selects a wrong Tile (not on the board, or not his), the current piece is unselected */
         selectedPiecePosition = null;
         pieceSelected = false;
         return pieceSelected;
@@ -80,6 +82,7 @@ public class Game {
             // FIXME Problem for special moves with King/Rook
             if( !(board.getTile(selectedPiecePosition).getPiece().getColor() == board.getTile(newPos).getPiece().getColor()) ) {
                 board.getTile(selectedPiecePosition).getPiece().move();
+                updateThreatenedTiles(newPos);
                 board.getTile(newPos).setPiece(board.getTile(selectedPiecePosition).getPiece());
                 board.getTile(selectedPiecePosition).resetPiece();
 
@@ -90,10 +93,35 @@ public class Game {
         }
     }
 
+    private void updateThreatenedTiles(Position newPos) {
+        ArrayList<Position> positions = board.getThreatenedTiles(getSelectedPiece(), selectedPiecePosition);
+        for (Position pos: positions) {
+            board.getTile(pos).removeThreat(getSelectedPiece());
+        }
+
+        positions = board.getThreatenedTiles(getSelectedPiece(), newPos);
+        for (Position pos: positions) {
+            board.getTile(pos).addThreat(getSelectedPiece());
+        }
+    }
+
+    private boolean isCapturing(Position newPos) {
+        if(board.isOnGrid(selectedPiecePosition) && board.isOnGrid(newPos)) {
+            if( !(board.getTile(selectedPiecePosition).getPiece().getColor() == board.getTile(newPos).getPiece().getColor()) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void capturePiece(Position pos) {
+
+    }
+
     public boolean canMoveTo(int col, int row) {
         Position newPos = new Position(col,row);
         if(pieceSelected && board.isOnGrid(newPos)) {
-            ArrayList<Position> positions = getMoves(selectedPiecePosition);
+            ArrayList<Position> positions = getMoves(getSelectedPiece(),selectedPiecePosition);
             if (positions.contains(newPos)) {
                 return true;
             }

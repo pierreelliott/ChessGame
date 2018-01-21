@@ -10,10 +10,11 @@ import java.util.ArrayList;
 public class PieceKing extends Piece {
     public PieceKing(ColorEnum color) {
         super(color, TypeEnum.KING);
+        canMoveToThreatenedTiles = false;
     }
 
     @Override
-    public ArrayList<Position> getPossibleMoves(Position position, Chessboard chessboard) {
+    public ArrayList<Position> getPossibleMoves(Position position) {
         ArrayList<Position> positions = new ArrayList<>();
 
         Position pos;
@@ -22,26 +23,14 @@ public class PieceKing extends Piece {
                 if(i == 0 && j == 0) {
                     continue;
                 }
-                pos = new Position(position, new Position(i,j));
-                if(chessboard.isOnGrid(pos)) {
-                    if (chessboard.isOccuped(pos)) {
-                        if (chessboard.getTile(pos).getPiece().getColor() != color) {
-                            positions.add(pos);
-                        }
-                    } else {
-                        /* If the Tile isn't threatened by an ennemy piece */
-                        if (!chessboard.getTile(pos).isDangerousFor(color)) {
-                            positions.add(pos);
-                        }
-                    }
-                }
+                positions.add(new Position(position, new Position(i,j)));
             }
         }
         return positions;
     }
 
     @Override
-    public ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard) {
+    public ArrayList<Position> getSpecialMoves(Position position) {
         ArrayList<Position> positions = new ArrayList<>();
 
         if(moved) {
@@ -72,31 +61,21 @@ public class PieceKing extends Piece {
         posEmpty.add( posL3);
 
         // Check first condition : no other piece.
-        for (Position pos : posEmpty) {
-            if(chessboard.isOnGrid(pos)) {
-                if(chessboard.isOccuped(pos)) {
-                    return positions;
-                }
-            }
+        if(moved) {
+            return positions;
         }
 
-        // Check second condition : There is a rook
-        if(chessboard.isOnGrid(posRRook1)) {
-            if (chessboard.isOccuped(posRRook1)) {
-                if (chessboard.getTile(posRRook1).getPiece().type == TypeEnum.ROOK &&
-                        !chessboard.getTile(posRRook1).getPiece().hasMoved()) {
-                    positions.add(posR2);
-                }
-            }
-        }
-        if(chessboard.isOnGrid(posRRook2)) {
-            if (chessboard.isOccuped(posRRook2)) {
-                if (chessboard.getTile(posRRook2).getPiece().type == TypeEnum.ROOK &&
-                        !chessboard.getTile(posRRook2).getPiece().hasMoved()) {
-                    positions.add(posL2);
-                }
-            }
-        }
+        positions.add(posRRook1);
+        positions.add(posRRook2);
+
+        return positions;
+    }
+
+    @Override
+    public ArrayList<Position> getThreatenedTiles(Position position) {
+        ArrayList<Position> positions = new ArrayList<>();
+
+        // TODO Récupérer les positions où le roi peut aller bouffer des pièces adverses
 
         return positions;
     }
