@@ -123,6 +123,11 @@ public class Chessboard {
         return position.getPosX() >= 0 && position.getPosX() < 8 && position.getPosY() >= 0 && position.getPosY() < 8;
     }
 
+    // TODO Vérifie qu'il n'y pas d'obstacles sur le déplacement depuis start vers end
+    public boolean canSee(Position start, Position end) {
+        return true;
+    }
+
     /**
      * Return a list of positions where the piece can be moved.
      * Need the position of the piece picked.
@@ -139,7 +144,9 @@ public class Chessboard {
         ArrayList<Position> temp = piece.getPossibleMoves(pos);
         for (Position p: temp) {
             if(isOnGrid(p)) {
-                positions.add(p);
+                if(canSee(pos, p)) { // TODO Rajouter un check sur la piece si elle a une ligne de vue (cf, le cavalier)
+                    positions.add(p);
+                }
             }
         }
 
@@ -151,7 +158,7 @@ public class Chessboard {
      * Need the position of the piece picked.
      * @return ArrayList<Position>
      */
-    public ArrayList<Position> getSpecialeMoves(Piece piece, Position pos){
+    public ArrayList<Position> getSpecialMoves(Piece piece, Position pos){
         ArrayList<Position> positions = new ArrayList<>();
 
         if(!isOnGrid(pos)){
@@ -162,7 +169,9 @@ public class Chessboard {
         ArrayList<Position> temp = piece.getSpecialMoves(pos);
         for (Position p: temp) {
             if(isOnGrid(p)) {
-                positions.add(p);
+                if(canSee(pos, p)) {
+                    positions.add(p);
+                }
             }
         }
 

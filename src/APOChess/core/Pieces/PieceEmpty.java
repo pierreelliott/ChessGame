@@ -18,15 +18,15 @@ public class PieceEmpty extends Piece {
     }
 
     @Override
-    public ArrayList<Position> getPossibleMoves(Position position, Chessboard chessboard) {
+    public ArrayList<Position> getPossibleMoves(Position position) {
         return new ArrayList<>();
     }
 
     @Override
-    public ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard) {
+    public ArrayList<Position> getSpecialMoves(Position position) {
         return new ArrayList<>();
     }
 
     @Override
-    public ArrayList<Position> getThreatenedTiles(Position position, Chessboard chessboard) { return new ArrayList<>(); }
+    public ArrayList<Position> getThreatenedTiles(Position position) { return new ArrayList<>(); }
 }

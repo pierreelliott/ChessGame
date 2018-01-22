@@ -37,33 +37,8 @@ public class PieceKing extends Piece {
             return positions;
         }
 
-        Position posR1 = new Position(1,0);
-        Position posR2 = new Position(2,0);
-        Position posRRook1 = new Position(3,0);
-
-        Position posL1 = new Position(-1,0);
-        Position posL2 = new Position(-2,0);
-        Position posL3 = new Position(-3,0);
-        Position posRRook2 = new Position(-4,0);
-
-        posR1 = new Position(position, posR1);
-        posR2 = new Position(position, posR2);
-        posRRook1 = new Position(position, posRRook1);
-        posL2 = new Position(position, posL2);
-        posL3 = new Position(position, posL3);
-        posRRook2 = new Position(position, posRRook2);
-
-        ArrayList<Position> posEmpty = new ArrayList<>();
-        posEmpty.add(posR1);
-        posEmpty.add(posR2);
-        posEmpty.add(posL1);
-        posEmpty.add(posL2);
-        posEmpty.add( posL3);
-
-        // Check first condition : no other piece.
-        if(moved) {
-            return positions;
-        }
+        Position posRRook1 = new Position(position, new Position(3,0));
+        Position posRRook2 = new Position(position, new Position(-4,0));
 
         positions.add(posRRook1);
         positions.add(posRRook2);

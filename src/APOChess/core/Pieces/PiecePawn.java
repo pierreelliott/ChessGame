@@ -14,6 +14,7 @@ public class PiecePawn extends Piece {
 
     @Override
     public ArrayList<Position> getPossibleMoves(Position position) {
+        // TODO remove the chessboard from here
         ArrayList<Position> positions = new ArrayList<>();
 
         Position pFront = new Position(0, 1);
@@ -71,6 +72,7 @@ public class PiecePawn extends Piece {
 
     @Override
     public ArrayList<Position> getSpecialMoves(Position position) {
+        // TODO remove the chessboard from here
         ArrayList<Position> positions = new ArrayList<>();
 
         Position enPassantLeft = new Position(-1, 1);

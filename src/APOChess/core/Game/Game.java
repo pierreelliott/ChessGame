@@ -2,7 +2,10 @@ package APOChess.core.Game;
 
 import APOChess.Main;
 import APOChess.core.Enum.ColorEnum;
+import APOChess.core.Enum.TypeEnum;
 import APOChess.core.Pieces.Piece;
+import APOChess.core.Pieces.PieceKing;
+import APOChess.core.Pieces.PiecePawn;
 
 import java.util.ArrayList;
 
@@ -37,7 +40,7 @@ public class Game {
 
         if (board.isOnGrid(new Position(col, row))) {
             ArrayList<Position> standardMoves = board.getAvailableMoves(piece,pos);
-            ArrayList<Position> specialMoves = board.getSpecialeMoves(piece,pos);
+            ArrayList<Position> specialMoves = board.getSpecialMoves(piece,pos);
 
             positions.addAll(standardMoves);
             positions.addAll(specialMoves);
@@ -118,8 +121,61 @@ public class Game {
 
     }
 
-    public boolean canMoveTo(int col, int row) {
-        Position newPos = new Position(col,row);
+    // TODO Faudrait séparer un peu plus le code (je pense que ça doit être possible)
+
+    /**
+     * Validates (or not) Piece's special moves returned by the board
+     * @return
+     */
+    public ArrayList<Position> getSpecialMoves() {
+        ArrayList<Position> positions = new ArrayList<>();
+        Piece selectedPiece;
+        if (pieceSelected) {
+            ArrayList<Position> specialMoves = board.getSpecialMoves(getSelectedPiece(), selectedPiecePosition);
+            selectedPiece = getSelectedPiece();
+
+            if (selectedPiece instanceof PieceKing) {
+                for(Position pos : specialMoves) {
+                    // On considère que la ligne de vue a été vérifiée
+                    Piece p = board.getTile(pos).getPiece();
+                    if(p.getColor() == playerTurn &&            // Est-ce une pièce de la même couleur ?
+                            p.getType() == TypeEnum.ROOK &&     // Est-ce bien une tour à l'emplacement ?
+                            p.hasMoved() == false) {            // A-t-elle déjà bougé ?
+
+                        if(true) { // TODO Est-elle "en échec" ?
+                            positions.add(pos);
+                        }
+                    }
+                }
+            } else if (selectedPiece instanceof PiecePawn) {
+                // TODO revoir l'ordre des conditions
+
+                for(Position pos : specialMoves) {
+                    Piece p = board.getTile(pos).getPiece();
+
+                    if(pos.getPosX() != selectedPiecePosition.getPosX()) {      // The Tile isn't ahead
+                        if(p.getColor() != playerTurn) {                       // Does the piece on the Tile not belong to the player ?
+
+                            Position adj = new Position(pos.getPosX(), selectedPiecePosition.getPosY());
+                            if (board.getTile(adj).getPiece().getColor() == ColorEnum.getOpposite(playerTurn)) {
+                                // Was there an opponent's Piece on the adjacent Tile ?
+                                positions.add(pos);
+                            }
+                        }
+
+                        if(p.getColor() == ColorEnum.getOpposite(playerTurn)) {
+                            positions.add(pos);
+                        }
+                    }
+
+                    // We do not manage the Pawn's "fast forward" here, the piece manage it by itself
+                }
+            }
+        }
+        return positions;
+    }
+
+    public boolean canMoveTo(Position newPos) {
         if(pieceSelected && board.isOnGrid(newPos)) {
             ArrayList<Position> positions = getMoves(getSelectedPiece(),selectedPiecePosition);
             if (positions.contains(newPos)) {
