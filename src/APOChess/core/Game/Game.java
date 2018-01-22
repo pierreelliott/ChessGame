@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 public class Game {
     private ColorEnum playerTurn;
-    private Main main;
     private boolean pieceSelected;
     private Chessboard board;
     private Position selectedPiecePosition;
@@ -21,7 +20,6 @@ public class Game {
     }
 
     public Game(Main main, String filepath) {
-        this.main = main;
         this.pieceSelected = false;
         this.playerTurn = ColorEnum.WHITE;
 
@@ -34,66 +32,51 @@ public class Game {
         }
     }
 
-    public ArrayList<Position> getMoves(Piece piece,int col, int row) {
-        ArrayList<Position> positions = new ArrayList<>();
-        Position pos = new Position(col, row);
+    /**
+     * Select the piece located at the given column and row. If the location isn't correct, does nothing.
+     * If a piece was selected, moves the piece to the new location (if possible);
+     * otherwise, selects this piece if it belongs to the current player.
+     * @param col Selected Tile's location's column
+     * @param row Selected Tile's location's row
+     */
+    public void selectTile(int col, int row) {
+        Position pos = new Position(col,row);
+        if(board.isOnGrid(pos)) {
+            if(pieceSelected) { // If a piece is selected
+                movePiece(pos); // Move the selected piece to the new pos
 
-        if (board.isOnGrid(new Position(col, row))) {
-            ArrayList<Position> standardMoves = board.getAvailableMoves(piece,pos);
-            ArrayList<Position> specialMoves = board.getSpecialMoves(piece,pos);
-
-            positions.addAll(standardMoves);
-            positions.addAll(specialMoves);
+                selectedPiecePosition = null; // Deselect the piece
+                pieceSelected = false;
+            } else {
+                Piece piece = board.getTile(pos).getPiece();
+                if(piece.getColor() == playerTurn) { // If the piece selected belongs to the player, select it
+                    selectedPiecePosition = pos;
+                    pieceSelected = true;
+                }
+            }
         }
-
-        return positions;
-    }
-
-    public ArrayList<Position> getMoves(Piece piece,Position pos) {
-        return getMoves(piece,pos.getPosX(), pos.getPosY());
     }
 
     /**
-     * Select the piece located at the given column and row.
-     * If the location isn't correct, any actual piece is deselected.
-     * @param col Piece's location's column
-     * @param row Piece's location's row
-     * @return <em>True</em> if a piece has been selected (ie, the selection is on the board and it's the player turn), <em>False</em> otherwise
+     * Move a piece to the given Position if it is possible.
+     * If a piece has been moved, the current player change.
+     * @param newPos
      */
-    public boolean selectPiece(int col, int row) {
-        // TODO Changer le fonctionnement pour matcher le controller (selectTile -> traitement en interne de Game)
-        /* If the Tile selected is on the grid and the piece on it belongs to the player */
-        if(board.isOnGrid(new Position(col, row)) && board.getTile(col, row).getPiece().getColor() == playerTurn) {
-            selectedPiecePosition = new Position(col, row);
-            pieceSelected = true;
-            return pieceSelected;
-        }
-        /* If the player selects a wrong Tile (not on the board, or not his), the current piece is unselected */
-        selectedPiecePosition = null;
-        pieceSelected = false;
-        return pieceSelected;
-    }
+    private void movePiece(Position newPos) {
+        // TODO Check if player's king isn't under check
+        Piece piece = getSelectedPiece();
+        if(canMoveTo(playerTurn,piece,selectedPiecePosition,newPos)) {
+            if(board.isOccuped(newPos)) {
 
-    /**
-     * Move a piece to the new Position (from col and row parameters)
-     * @param col Column of the new piece's Position
-     * @param row Row of the new piece's Position
-     */
-    public void movePiece(int col, int row) {
-        Position newPos = new Position(col, row);
-        if(board.isOnGrid(selectedPiecePosition) && board.isOnGrid(newPos)) {
-            /* If the two pieces aren't the same color, we can move */
-            // FIXME Problem for special moves with King/Rook
-            if( !(board.getTile(selectedPiecePosition).getPiece().getColor() == board.getTile(newPos).getPiece().getColor()) ) {
-                board.getTile(selectedPiecePosition).getPiece().move();
-                updateThreatenedTiles(newPos);
-                board.getTile(newPos).setPiece(board.getTile(selectedPiecePosition).getPiece());
+            } else {
+                piece.move();
+                board.getTile(newPos).setPiece(piece);
                 board.getTile(selectedPiecePosition).resetPiece();
 
-                playerTurn = ColorEnum.getOpposite(playerTurn);
+                // TODO Handle the possible second move
             }
-            // No matter if the piece hasn't moved, it is deselected
-            pieceSelected = false;
+
+            playerTurn = ColorEnum.getOpposite(playerTurn);
         }
     }
 
@@ -119,96 +102,124 @@ public class Game {
         return false;
     }
 
-    // TODO À faire (après réflexion, je me demande si elle ne fait pas doublon avec movePiece...)
-    private void capturePiece(Position pos) {
-
-    }
-
-    // TODO Faudrait séparer un peu plus le code (je pense que ça doit être possible)
     /**
-     * Validates (or not) Piece's special moves returned by the board
-     * @return
+     * Check if the positions from normal moves (for the given Piece) returned by the Chessboard follow chess game rules
+     * @param player Player who owns the piece
+     * @param piece Piece which we want the special moves from
+     * @param from Position of the piece on the board
+     * @return Valid new positions from normal moves for the given Piece
      */
-    public ArrayList<Position> getSpecialMoves() {
+    public ArrayList<Position> getNormalMoves(ColorEnum player, Piece piece, Position from) {
         ArrayList<Position> positions = new ArrayList<>();
-        Piece selectedPiece;
-        if (pieceSelected) {
-            ArrayList<Position> specialMoves = board.getSpecialMoves(getSelectedPiece(), selectedPiecePosition);
-            selectedPiece = getSelectedPiece();
+        ArrayList<Position> normalMoves = board.getAvailableMoves(piece, from);
 
-            if (selectedPiece instanceof PieceKing) {
-                for(Position pos : specialMoves) {
-                    // On considère que la ligne de vue a été vérifiée
-                    Piece p = board.getTile(pos).getPiece();
-                    if(p.getColor() == playerTurn &&            // Est-ce une pièce de la même couleur ?
-                            p.getType() == TypeEnum.ROOK &&     // Est-ce bien une tour à l'emplacement ?
-                            p.hasMoved() == false) {            // A-t-elle déjà bougé ?
-
-                        if(true) { // TODO Est-elle "en échec" ?
-                            positions.add(pos);
-                        }
-                    }
-                }
-            } else if (selectedPiece instanceof PiecePawn) {
-                // TODO revoir l'ordre des conditions
-
-                for(Position pos : specialMoves) {
-                    Piece p = board.getTile(pos).getPiece();
-
-                    if(pos.getPosX() != selectedPiecePosition.getPosX()) {      // The Tile isn't ahead
-                        if(p.getColor() != playerTurn) {                       // Does the piece on the Tile not belong to the player ?
-
-                            Position adj = new Position(pos.getPosX(), selectedPiecePosition.getPosY());
-                            if (board.getTile(adj).getPiece().getColor() == ColorEnum.getOpposite(playerTurn)) {
-                                // Was there an opponent's Piece on the adjacent Tile ?
-                                positions.add(pos);
-                            }
-                        }
-
-                        if(p.getColor() == ColorEnum.getOpposite(playerTurn)) {
-                            positions.add(pos);
-                        }
-                    }
-
-                    // We do not manage the Pawn's "fast forward" here, the piece manage it by itself
+        if (piece instanceof PieceKing) {
+            for(Position pos : normalMoves) {
+                // TODO Vérifier que le roi n'est pas en échec (peut-être faire une fonction externe)
+            }
+        } else if (piece instanceof PiecePawn) {
+            for(Position pos : normalMoves) {
+                // TODO Handle Pawn's promotion
+                if(!board.isOccuped(pos)) { // If there's no one on the Tile
+                    positions.add(pos);
                 }
             }
+        } else {
+            // If not a King or a Pawn, then there's no conditions on normal moves
+            positions.addAll(normalMoves);
         }
         return positions;
     }
 
+    /**
+     * Check if the positions from normal moves (for the currently selected Piece) returned by the Chessboard follow chess game rules
+     * @return Valid new positions from normal moves for the currently selected Piece
+     */
     public ArrayList<Position> getNormalMoves() {
-        ArrayList<Position> positions = new ArrayList<>();
-        Piece selectedPiece;
-        if (pieceSelected) {
-            ArrayList<Position> normalMoves = board.getAvailableMoves(getSelectedPiece(), selectedPiecePosition);
-            selectedPiece = getSelectedPiece();
+        if(pieceSelected) {
+            return getNormalMoves(playerTurn,getSelectedPiece(),selectedPiecePosition);
+        }
+        return new ArrayList<>();
+    }
 
-            if (selectedPiece instanceof PieceKing) {
-                for(Position pos : normalMoves) {
-                    // TODO Vérifier que le roi n'est pas en échec (peut-être faire une fonction externe)
-                }
-            } else if (selectedPiece instanceof PiecePawn) {
-                for(Position pos : normalMoves) {
-                    // TODO Handle Pawn's promotion
-                    if(!board.getTile(pos).isOccuped()) { // If there's no one on the Tile
+    /**
+     * Check if the positions from special moves (for the given Piece) returned by the Chessboard follow chess game rules
+     * @param player Player who owns the piece
+     * @param piece Piece which we want the special moves from
+     * @param from Position of the piece on the board
+     * @return Valid new positions from special moves for the given Piece
+     */
+    public ArrayList<Position> getSpecialMoves(ColorEnum player, Piece piece, Position from) {
+        // TODO Faudrait séparer un peu plus le code (je pense que ça doit être possible)
+        ArrayList<Position> positions = new ArrayList<>();
+        ArrayList<Position> specialMoves = board.getSpecialMoves(piece, from);
+
+        if (piece instanceof PieceKing) {
+            for(Position pos : specialMoves) {
+                Piece p = board.getTile(pos).getPiece();
+                if(p.getColor() == player &&            // Does the Piece belong to the player ?
+                        p.getType() == TypeEnum.ROOK &&     // Is it a Rook ?
+                        p.hasMoved() == false) {            // Has it already moved ?
+
+                    if(true) { // TODO Est-elle "en échec" ?
                         positions.add(pos);
                     }
                 }
-            } else {
-                // If not a King or a Pawn, then there's no conditions on normal moves
-                positions.addAll(normalMoves);
+            }
+        } else if (piece instanceof PiecePawn) {
+            // TODO (Peut-être) revoir l'ordre des conditions
+
+            for(Position pos : specialMoves) {
+                Piece p = board.getTile(pos).getPiece();
+
+                if(p.getColor() != player) { // Does the Piece on the Tile not belong to the player ?
+
+                    Position adj = new Position(pos.getPosX(), from.getPosY());
+                    if (board.getTile(adj).getPiece().getColor() == ColorEnum.getOpposite(player)) {
+                        // Was there an opponent's Piece on the adjacent Tile ?
+                        positions.add(pos);
+                    }
+                }
+
+                if(p.getColor() == ColorEnum.getOpposite(player)) {
+                    // The Pawn simply capture the opponent Piece
+                    positions.add(pos);
+                }
+
+                // We do not manage the Pawn's "fast forward" here, the piece manage it by itself
             }
         }
         return positions;
     }
 
-    // Fixme Voir si c'est vraiment utile
-    public boolean canMoveTo(int col, int row) {
-        Position newPos = new Position(col,row);
-        if(pieceSelected && board.isOnGrid(newPos)) {
-            ArrayList<Position> positions = getMoves(getSelectedPiece(),selectedPiecePosition);
-            if (positions.contains(newPos)) {
+    /**
+     * Check if the positions from special moves (for the currently selected Piece) returned by the Chessboard follow chess game rules
+     * @return Valid new positions from special moves for the currently selected Piece
+     */
+    public ArrayList<Position> getSpecialMoves() {
+        if(pieceSelected) {
+            return getSpecialMoves(playerTurn,getSelectedPiece(),selectedPiecePosition);
+        }
+        return new ArrayList<>();
+    }
+
+    /**
+     * Test if the given piece of the given player can move from a position to another
+     * @param player Player who owns the piece
+     * @param piece Piece which move is checked
+     * @param from Starting position of the piece
+     * @param to End position of the piece
+     * @return
+     */
+    public boolean canMoveTo(ColorEnum player, Piece piece, Position from, Position to) {
+        if(board.isOnGrid(from) && board.isOnGrid(to)) {
+            ArrayList<Position> positions = getSpecialMoves(player,piece,from);
+            if(positions.contains(to)) {
+                return true;
+            }
+
+            positions = getNormalMoves(player,piece,from);
+            if(positions.contains(to)) {
                 return true;
             }
         }

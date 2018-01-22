@@ -3,7 +3,6 @@ package APOChess.gui.controller;
 import APOChess.Main;
 import APOChess.core.Game.Game;
 import APOChess.core.Game.Position;
-import APOChess.core.Pieces.PieceEmpty;
 import APOChess.gui.custom.CustomCell;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -127,55 +126,40 @@ public class GameController extends MainController {
     }
 
     private void cellClicked(int col, int row){
-        /*
-            TODO How this method should work :
-                game.selectTile(col,row);
-                String[][] board = game.getBoard();
-                if(game.isPieceSelected()) {
-                    ArrayList<Position> positions = game.getNormalMoves();
-                    for (Position p : positions ) {
-                        customCells[p.getPosX()][p.getPosY()].setColor(colorNormalMoves);
-                    }
-                    positions = game.getSpecialMoves();
-                    for (Position p : positions ) {
-                        customCells[p.getPosX()][p.getPosY()].setColor(colorSpecialMoves);
-                    }
-                }
-         */
 
-        Color colorSelected = Color.RED;
-        if(!game.isPieceSelected()){ // If the player hasn't selected a piece
-            if(game.selectPiece(col, row)) {
-                ArrayList<Position> positions = game.getMoves(game.getSelectedPiece(),col, row);
-                lastClick = customCells[col][row];
+        // TODO How this method should work :
+        Color colorNormalMoves = Color.RED;
+        Color colorSpecialMoves = Color.RED;
 
-                for (Position p : positions ) {
-                    customCells[p.getPosX()][p.getPosY()].setColor(colorSelected);
-                }
+        game.selectTile(col,row);
+
+        String[][] board = game.getBoard();
+        for (int i = 0; i < SIZE_GRID; i++) {
+            for (int j = 0; j < SIZE_GRID; j++) {
+                customCells[col][row].setImage(board[j][i]);
+                System.out.print(board[j][i] + " | ");
+            }
+            System.out.print("\n");
+        }
+        System.out.println("================================");
+
+        restoreDefaultColor();
+
+        if(game.isPieceSelected()) {
+            ArrayList<Position> positions = game.getNormalMoves();
+            for (Position p : positions ) {
+                customCells[p.getPosX()][p.getPosY()].setColor(colorNormalMoves);
             }
 
-        } else { // If the player has selected a piece
-            Color debugColor = customCells[col][row].getColor();
-            if(game.canMoveTo(col, row)){ // Si la case est une position valide //ENG
-                // TODO implémenter la gestion de la pièce enlevé s'il y a écrasement
-
-                String pieceImage = game.getSelectedPiece().getImage(); // Need to get the image before moving anything
-                game.movePiece(col,row);
-
-                // On met a jour la nouvelle case graphique //ENG
-                customCells[col][row].setImage(pieceImage);
-
-                // On met a jour graphiquement l'ancienne case contenant la pièce, par du vide. //ENG
-                customCells[lastClick.getCol()][lastClick.getRow()].setImage(new PieceEmpty().getImage());
-
-                restoreDefaultColor();
-            } else { // Si la case n'est pas une position valide //ENG
-                game.selectPiece(-1,-1); // We deselect the piece
-                restoreDefaultColor();
+            positions = game.getSpecialMoves();
+            for (Position p : positions ) {
+                customCells[p.getPosX()][p.getPosY()].setColor(colorSpecialMoves);
             }
         }
 
+         /*
         main.logger.log(Level.FINE, "Cell ["+col+";"+row+"] clicked.");
+        */
     }
 
     private void cellEntered(int col, int row) { //TODO
