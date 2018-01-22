@@ -61,6 +61,7 @@ public class Game {
      * @return <em>True</em> if a piece has been selected (ie, the selection is on the board and it's the player turn), <em>False</em> otherwise
      */
     public boolean selectPiece(int col, int row) {
+        // TODO Changer le fonctionnement pour matcher le controller (selectTile -> traitement en interne de Game)
         /* If the Tile selected is on the grid and the piece on it belongs to the player */
         if(board.isOnGrid(new Position(col, row)) && board.getTile(col, row).getPiece().getColor() == playerTurn) {
             selectedPiecePosition = new Position(col, row);
@@ -108,6 +109,7 @@ public class Game {
         }
     }
 
+    // Fixme Je ne sais plus du tout ce que j'avais voulu faire...
     private boolean isCapturing(Position newPos) {
         if(board.isOnGrid(selectedPiecePosition) && board.isOnGrid(newPos)) {
             if( !(board.getTile(selectedPiecePosition).getPiece().getColor() == board.getTile(newPos).getPiece().getColor()) ) {
@@ -117,12 +119,12 @@ public class Game {
         return false;
     }
 
+    // TODO À faire (après réflexion, je me demande si elle ne fait pas doublon avec movePiece...)
     private void capturePiece(Position pos) {
 
     }
 
     // TODO Faudrait séparer un peu plus le code (je pense que ça doit être possible)
-
     /**
      * Validates (or not) Piece's special moves returned by the board
      * @return
@@ -175,7 +177,35 @@ public class Game {
         return positions;
     }
 
-    public boolean canMoveTo(Position newPos) {
+    public ArrayList<Position> getNormalMoves() {
+        ArrayList<Position> positions = new ArrayList<>();
+        Piece selectedPiece;
+        if (pieceSelected) {
+            ArrayList<Position> normalMoves = board.getAvailableMoves(getSelectedPiece(), selectedPiecePosition);
+            selectedPiece = getSelectedPiece();
+
+            if (selectedPiece instanceof PieceKing) {
+                for(Position pos : normalMoves) {
+                    // TODO Vérifier que le roi n'est pas en échec (peut-être faire une fonction externe)
+                }
+            } else if (selectedPiece instanceof PiecePawn) {
+                for(Position pos : normalMoves) {
+                    // TODO Handle Pawn's promotion
+                    if(!board.getTile(pos).isOccuped()) { // If there's no one on the Tile
+                        positions.add(pos);
+                    }
+                }
+            } else {
+                // If not a King or a Pawn, then there's no conditions on normal moves
+                positions.addAll(normalMoves);
+            }
+        }
+        return positions;
+    }
+
+    // Fixme Voir si c'est vraiment utile
+    public boolean canMoveTo(int col, int row) {
+        Position newPos = new Position(col,row);
         if(pieceSelected && board.isOnGrid(newPos)) {
             ArrayList<Position> positions = getMoves(getSelectedPiece(),selectedPiecePosition);
             if (positions.contains(newPos)) {
@@ -212,11 +242,22 @@ public class Game {
         return selectedPiecePosition;
     }
 
+    // Fixme Voir si y en a toujours besoin (normalement oui)
     public String getPieceImage(int col, int row) {
         Position pos = new Position(col, row);
         if(board.isOnGrid(pos)) {
             return board.getTile(pos).getPiece().getImage();
         }
         return "";
+    }
+
+    public String[][] getBoard() {
+        String[][] imageBoard = new String[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                imageBoard[i][j] = board.getTile(i,j).getPiece().getImage();
+            }
+        }
+        return imageBoard;
     }
 }

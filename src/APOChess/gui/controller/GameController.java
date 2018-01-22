@@ -127,6 +127,22 @@ public class GameController extends MainController {
     }
 
     private void cellClicked(int col, int row){
+        /*
+            TODO How this method should work :
+                game.selectTile(col,row);
+                String[][] board = game.getBoard();
+                if(game.isPieceSelected()) {
+                    ArrayList<Position> positions = game.getNormalMoves();
+                    for (Position p : positions ) {
+                        customCells[p.getPosX()][p.getPosY()].setColor(colorNormalMoves);
+                    }
+                    positions = game.getSpecialMoves();
+                    for (Position p : positions ) {
+                        customCells[p.getPosX()][p.getPosY()].setColor(colorSpecialMoves);
+                    }
+                }
+         */
+
         Color colorSelected = Color.RED;
         if(!game.isPieceSelected()){ // If the player hasn't selected a piece
             if(game.selectPiece(col, row)) {

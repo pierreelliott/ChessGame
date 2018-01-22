@@ -64,7 +64,6 @@ public abstract class Piece {
      * Returns a list of Position associated to a direction from a position.
      * @param position Position of the Piece
      * @param direction Position. Direction to walk
-     * @param chessboard Chessboard for viewing other pieces
      * @return ArrayList<Position>
      */
     protected ArrayList<Position> getPosDirection(Position position, Position direction){
