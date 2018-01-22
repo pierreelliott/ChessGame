@@ -136,7 +136,7 @@ public class GameController extends MainController {
         String[][] board = game.getBoard();
         for (int i = 0; i < SIZE_GRID; i++) {
             for (int j = 0; j < SIZE_GRID; j++) {
-                customCells[col][row].setImage(board[j][i]);
+                customCells[j][i].setImage(board[j][i]);
                 System.out.print(board[j][i] + " | ");
             }
             System.out.print("\n");
