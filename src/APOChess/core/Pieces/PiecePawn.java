@@ -1,5 +1,7 @@
 package APOChess.core.Pieces;
 
+import APOChess.core.Action.Action;
+import APOChess.core.Action.ActionRemove;
 import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Enum.TypeEnum;
 import APOChess.core.Game.Chessboard;
@@ -109,5 +111,17 @@ public class PiecePawn extends Piece {
         }
 
         return positions;
+    }
+
+    @Override
+    public ArrayList<Action> getActions(Position positionStart, Position positionEnd) {
+        ArrayList<Action> actions = new ArrayList<>();
+        if(positionStart.getPosX() - positionEnd.getPosX() > 0){
+            actions.add(new ActionRemove(new Position(positionStart, new Position(-1,0))));
+        } else {
+            actions.add(new ActionRemove(new Position(positionStart, new Position(1,0))));
+        }
+
+        return actions;
     }
 }

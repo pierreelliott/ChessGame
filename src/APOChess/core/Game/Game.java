@@ -1,6 +1,7 @@
 package APOChess.core.Game;
 
 import APOChess.Main;
+import APOChess.core.Action.Action;
 import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Pieces.Piece;
 import javafx.geometry.Pos;
@@ -119,6 +120,16 @@ public class Game {
         return false;
     }
 
+    public void removePiece(int col, int row){
+        removePiece(new Position(col, row));
+    }
+
+    public void removePiece(Position positionPiece){
+        if(board.isOnGrid(positionPiece)){
+            board.getTile(positionPiece).resetPiece();
+        }
+    }
+
 
     public boolean isSpecialMove(int col, int row) {
         Position newPos = new Position(col,row);
@@ -128,6 +139,11 @@ public class Game {
             }
         }
         return false;
+    }
+
+    public ArrayList<Action> getActions(int col, int row){
+        return board.getTile(selectedPiecePosition)
+                .getPiece().getActions(selectedPiecePosition, new Position(col, row));
     }
 
     /**

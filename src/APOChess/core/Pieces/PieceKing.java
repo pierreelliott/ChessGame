@@ -1,5 +1,6 @@
 package APOChess.core.Pieces;
 
+import APOChess.core.Action.Action;
 import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Enum.TypeEnum;
 import APOChess.core.Game.Chessboard;
@@ -99,5 +100,10 @@ public class PieceKing extends Piece {
         }
 
         return positions;
+    }
+
+    @Override
+    public ArrayList<Action> getActions(Position positionStart, Position positionEnd) {
+        return new ArrayList<>();
     }
 }

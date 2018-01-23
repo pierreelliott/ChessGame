@@ -1,5 +1,6 @@
 package APOChess.core.Pieces;
 
+import APOChess.core.Action.Action;
 import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Enum.TypeEnum;
 import APOChess.core.Game.Chessboard;
@@ -50,6 +51,11 @@ public class PieceKnight extends Piece {
 
     @Override
     public ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public ArrayList<Action> getActions(Position positionStart, Position positionEnd) {
         return new ArrayList<>();
     }
 }

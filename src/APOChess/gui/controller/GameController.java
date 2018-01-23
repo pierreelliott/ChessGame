@@ -1,12 +1,16 @@
 package APOChess.gui.controller;
 
 import APOChess.Main;
+import APOChess.core.Action.Action;
+import APOChess.core.Action.ActionMove;
+import APOChess.core.Action.ActionRemove;
 import APOChess.core.Game.Game;
 import APOChess.core.Game.Position;
 import APOChess.core.Pieces.PieceEmpty;
 import APOChess.gui.custom.CustomCell;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -150,6 +154,18 @@ public class GameController extends MainController {
 
                 if(game.isSpecialMove(col,row)){
                     main.logger.log(Level.WARNING, "Cell ["+col+";"+row+"] is a special move !.");
+                    ArrayList<Action> actions = game.getActions(col,row);
+                    for (Action action : actions) {
+                        if(action instanceof ActionMove){
+
+                        } else if (action instanceof ActionRemove){
+                            Position posRemove = ((ActionRemove) action).getPos();
+                            game.removePiece(posRemove);
+                            customCells[posRemove.getPosX()][posRemove.getPosY()].setImage(new PieceEmpty().getImage());
+
+                            main.logger.log(Level.WARNING, "Cell ["+posRemove.getPosX()+";"+posRemove.getPosY()+"] is removed !.");
+                        }
+                    }
                 }
 
                 String pieceImage = game.getSelectedPiece().getImage(); // Need to get the image before moving anything

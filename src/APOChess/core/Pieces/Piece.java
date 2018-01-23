@@ -1,5 +1,6 @@
 package APOChess.core.Pieces;
 
+import APOChess.core.Action.Action;
 import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Enum.TypeEnum;
 import APOChess.core.Game.Chessboard;
@@ -55,6 +56,8 @@ public abstract class Piece {
      * @return ArrayList<Position>
      */
     public abstract ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard);
+
+    public abstract ArrayList<Action> getActions(Position positionStart, Position positionEnd);
 
     /**
      * Returns a list of Position associated to a direction from a position.
