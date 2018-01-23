@@ -9,7 +9,7 @@ public class ActionMove implements Action{
 
     public ActionMove(Position posStart, Position posEnd){
         this.posStart = posStart;
-        this.posStart = posEnd;
+        this.posEnd = posEnd;
     }
 
     public Position getPosStart() {

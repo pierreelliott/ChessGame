@@ -131,8 +131,6 @@ public class GameController extends MainController {
     }
 
     private void cellClicked(int col, int row){
-        Color colorSelected = Color.RED;
-        Color colorSelected2 = Color.YELLOW;
         if(!game.isPieceSelected()){ // Si on a pas sélectionné de pions //ENG
             if(game.selectPiece(col, row)) {
                 ArrayList<Position> positionsStandard = game.getStandardMoves(col, row);
@@ -140,15 +138,14 @@ public class GameController extends MainController {
                 lastClick = customCells[col][row];
 
                 for (Position p : positionsStandard ) {
-                    customCells[p.getPosX()][p.getPosY()].setColor(colorSelected);
+                    customCells[p.getPosX()][p.getPosY()].setColor(Color.RED);
                 }
                 for (Position p : positionsSpecial ) {
-                    customCells[p.getPosX()][p.getPosY()].setColor(colorSelected2);
+                    customCells[p.getPosX()][p.getPosY()].setColor(Color.YELLOW);
                 }
             }
 
         } else { // Si on a déjà sélectionner un pion //ENG
-            Color debugColor = customCells[col][row].getColor();
             if(game.canMoveTo(col, row)){ // Si la case est une position valide //ENG
                 // TODO implémenter la gestion de la pièce enlevé s'il y a écrasement
 
@@ -157,7 +154,12 @@ public class GameController extends MainController {
                     ArrayList<Action> actions = game.getActions(col,row);
                     for (Action action : actions) {
                         if(action instanceof ActionMove){
-
+                            Position posStart = ((ActionMove) action).getPosStart();
+                            Position posEnd = ((ActionMove) action).getPosEnd();
+                            game.moveOtherPiece(posStart, posEnd);
+                            customCells[posStart.getPosX()][posStart.getPosY()].setImage(new PieceEmpty().getImage());
+                            customCells[posEnd.getPosX()][posEnd.getPosY()]
+                                    .setImage(game.getPieceImage(posEnd.getPosX(), posEnd.getPosY()));
                         } else if (action instanceof ActionRemove){
                             Position posRemove = ((ActionRemove) action).getPos();
                             game.removePiece(posRemove);
@@ -184,7 +186,7 @@ public class GameController extends MainController {
             }
         }
 
-        main.logger.log(Level.FINE, "Cell ["+col+";"+row+"] clicked.");
+        main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] clicked.");
     }
 
     private void cellEntered(int col, int row) { //TODO

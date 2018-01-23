@@ -75,9 +75,9 @@ public class PiecePawn extends Piece {
     public ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard) {
         ArrayList<Position> positions = new ArrayList<>();
 
-        if(false)
+        if((color == ColorEnum.WHITE) && (position.getPosY() != 3) ||
+                (color == ColorEnum.BLACK) && (position.getPosY() != 4))
             return positions;
-
 
         Position enPassantLeft = new Position(-1, 1);
         Position enPassantRight = new Position(1, 1);

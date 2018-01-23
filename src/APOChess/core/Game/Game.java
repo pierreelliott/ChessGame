@@ -108,6 +108,13 @@ public class Game {
         }
     }
 
+    public void moveOtherPiece(Position posStart, Position posEnd){
+        if(board.isOnGrid(posStart) && board.isOnGrid(posEnd)){
+            board.getTile(posEnd).setPiece(board.getTile(posStart).getPiece());
+            board.getTile(posStart).resetPiece();
+        }
+    }
+
     public boolean canMoveTo(int col, int row) {
         Position newPos = new Position(col,row);
         if(pieceSelected && board.isOnGrid(newPos)) {
