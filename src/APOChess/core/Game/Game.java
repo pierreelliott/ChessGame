@@ -3,6 +3,7 @@ package APOChess.core.Game;
 import APOChess.Main;
 import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Pieces.Piece;
+import javafx.geometry.Pos;
 
 import java.util.ArrayList;
 
@@ -31,23 +32,39 @@ public class Game {
         }
     }
 
-    public ArrayList<Position> getMoves(int col, int row) {
-        ArrayList<Position> positions = new ArrayList<>();
-
+    public ArrayList<Position> getStandardMoves(int col, int row) {
         if (board.isOnGrid(new Position(col, row)) &&
                 board.getTile(col, row).getPiece().getColor() == playerTurn) {
-            ArrayList<Position> standardMoves = board.getAvailableMoves(col, row);
-            ArrayList<Position> specialMoves = board.getSpecialeMoves(col, row);
-
-            positions.addAll(standardMoves);
-            positions.addAll(specialMoves);
+            return board.getAvailableMoves(col, row);
         }
+        return new ArrayList<>();
+    }
 
+    public ArrayList<Position> getStandardMoves(Position p) {
+        return getStandardMoves(p.getPosX(), p.getPosY());
+    }
+
+    public ArrayList<Position> getSpecialMoves(int col, int row) {
+        if (board.isOnGrid(new Position(col, row)) &&
+                board.getTile(col, row).getPiece().getColor() == playerTurn) {
+            return board.getSpecialeMoves(col, row);
+        }
+        return new ArrayList<>();
+    }
+
+    public ArrayList<Position> getSpecialMoves(Position p) {
+        return getSpecialMoves(p.getPosX(), p.getPosY());
+    }
+
+    public ArrayList<Position> getMoves(int col, int row) {
+        ArrayList<Position> positions = new ArrayList<>();
+        positions.addAll(getStandardMoves(col,row));
+        positions.addAll(getSpecialMoves(col,row));
         return positions;
     }
 
-    public ArrayList<Position> getMoves(Position pos) {
-        return getMoves(pos.getPosX(), pos.getPosY());
+    public ArrayList<Position> getMoves(Position p) {
+        return getMoves(p.getPosX(), p.getPosY());
     }
 
     /**
@@ -93,8 +110,20 @@ public class Game {
     public boolean canMoveTo(int col, int row) {
         Position newPos = new Position(col,row);
         if(pieceSelected && board.isOnGrid(newPos)) {
-            ArrayList<Position> positions = getMoves(selectedPiecePosition);
-            if (positions.contains(newPos)) {
+            ArrayList<Position> StandardPositions = getStandardMoves(selectedPiecePosition);
+            ArrayList<Position> SpecialPositions = getSpecialMoves(selectedPiecePosition);
+            if (StandardPositions.contains(newPos) || SpecialPositions.contains(newPos)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public boolean isSpecialMove(int col, int row) {
+        Position newPos = new Position(col,row);
+        if(pieceSelected && board.isOnGrid(newPos)) {
+            if (getSpecialMoves(selectedPiecePosition).contains(newPos)) {
                 return true;
             }
         }

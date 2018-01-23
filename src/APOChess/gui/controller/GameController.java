@@ -128,13 +128,18 @@ public class GameController extends MainController {
 
     private void cellClicked(int col, int row){
         Color colorSelected = Color.RED;
+        Color colorSelected2 = Color.YELLOW;
         if(!game.isPieceSelected()){ // Si on a pas sélectionné de pions //ENG
             if(game.selectPiece(col, row)) {
-                ArrayList<Position> positions = game.getMoves(col, row);
+                ArrayList<Position> positionsStandard = game.getStandardMoves(col, row);
+                ArrayList<Position> positionsSpecial = game.getSpecialMoves(col, row);
                 lastClick = customCells[col][row];
 
-                for (Position p : positions ) {
+                for (Position p : positionsStandard ) {
                     customCells[p.getPosX()][p.getPosY()].setColor(colorSelected);
+                }
+                for (Position p : positionsSpecial ) {
+                    customCells[p.getPosX()][p.getPosY()].setColor(colorSelected2);
                 }
             }
 
@@ -142,6 +147,10 @@ public class GameController extends MainController {
             Color debugColor = customCells[col][row].getColor();
             if(game.canMoveTo(col, row)){ // Si la case est une position valide //ENG
                 // TODO implémenter la gestion de la pièce enlevé s'il y a écrasement
+
+                if(game.isSpecialMove(col,row)){
+                    main.logger.log(Level.WARNING, "Cell ["+col+";"+row+"] is a special move !.");
+                }
 
                 String pieceImage = game.getSelectedPiece().getImage(); // Need to get the image before moving anything
                 game.movePiece(col,row);
