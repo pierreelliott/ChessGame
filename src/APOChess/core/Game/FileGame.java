@@ -4,11 +4,12 @@ import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Pieces.*;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class File {
+public class FileGame {
     private ArrayList<String> white;
     private ArrayList<String> black;
     private Tile[][] board;
@@ -21,12 +22,12 @@ public class File {
 
     /**
      * 
-     * @param filepath The relative path to the file which will be loaded
+     * @param file2load File which will be loaded
      * @throws IOException If an error occurs while reading the file
      * @throws Exception If the file contains incoherent data
      */
-    public File(String filepath) throws IOException, Exception {
-        BufferedReader file = new BufferedReader(new FileReader(filepath));
+    public FileGame(File file2load) throws IOException, Exception {
+        BufferedReader file = new BufferedReader(new FileReader(file2load));
         white = new ArrayList<>();
         black = new ArrayList<>();
 
@@ -91,20 +92,20 @@ public class File {
             line[1] = line[1].split("\n")[0];
             addPiece(createPiece(line[0], ColorEnum.WHITE), line[1]);
         }
-        if(piecesCounter != 112228) {
-            throw new Exception("Error number of chess pieces");
-        }
+//        if(piecesCounter != 112228) { //FIXME
+//            throw new Exception("Error number of chess pieces : " + piecesCounter);
+//        }
 
         length = black.size();
         piecesCounter = 0;
         for (i = 0; i < length; i++) {
             line = black.get(i).split("\t");
             line[1] = line[1].split("\n")[0];
-            addPiece(createPiece(line[0], ColorEnum.WHITE), line[1]);
+            addPiece(createPiece(line[0], ColorEnum.BLACK), line[1]);
         }
-        if(piecesCounter != 112228) {
-            throw new Exception("Error number of chess pieces");
-        }
+//        if(piecesCounter != 112228) { //FIXME
+//            throw new Exception("Error number of chess pieces : "+ piecesCounter);
+//        }
     }
 
     /**
@@ -138,7 +139,7 @@ public class File {
                 throw new Exception("Error out of bound position");
             }
 
-            this.board[posX][posY].setPiece(piece);
+            this.board[posX][-posY + 7].setPiece(piece);
 
         } else {
             /* If the position isn't 1 or 2 characters, there's an error in the file */

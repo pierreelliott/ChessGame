@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,8 +62,8 @@ public class Main extends Application {
         game.hide();
     }
 
-    public void loadGame(){ //TODO
-
+    public void loadGame(File file){
+        newGameMore(false, file); //FIXME a vérifier pour le boolean
     }
 
     /**
@@ -70,6 +71,14 @@ public class Main extends Application {
      * @param solo
      */
     public void newGame(boolean solo){
+        newGameMore(solo, null);
+    }
+
+    /**
+     * Show New Game windows
+     * @param solo
+     */
+    public void newGameMore(boolean solo, File file){
         menu.hide();
 
         GridPane root = new GridPane();
@@ -79,7 +88,7 @@ public class Main extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("gui/fx/GameFX.fxml"));
 
-            fxmlLoader.setController(new GameController(this));
+            fxmlLoader.setController(new GameController(this, file));
             Scene scene = new Scene(fxmlLoader.load(), 600, 400);
 
             game = new Stage();
@@ -106,5 +115,9 @@ public class Main extends Application {
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to create new Window.", e);
         }
+    }
+
+    public Stage getStageMenu(){
+        return menu;
     }
 }

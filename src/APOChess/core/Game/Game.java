@@ -6,6 +6,7 @@ import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Pieces.Piece;
 import javafx.geometry.Pos;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class Game {
@@ -16,20 +17,20 @@ public class Game {
     private Position selectedPiecePosition;
 
     public Game(Main main) {
-        this(main, "");
+        this(main, null);
     }
 
-    public Game(Main main, String filepath) {
+    public Game(Main main, File file) {
         this.main = main;
         this.pieceSelected = false;
         this.playerTurn = ColorEnum.WHITE;
 
         board = new Chessboard(main);
 
-        if(filepath.equalsIgnoreCase("")) {
+        if(file == null) {
             board.initialize();
         } else {
-            board.initialize(filepath);
+            board.initialize(file);
         }
     }
 

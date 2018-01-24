@@ -33,7 +33,7 @@ public class MainController implements Initializable {
     }
 
     /**
-     * File>Quit button pressed
+     * FileGame>Quit button pressed
      */
     public void menuQuit(){
         main.logger.log(Level.INFO, "Quit menu triggered");

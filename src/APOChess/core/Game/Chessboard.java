@@ -4,6 +4,7 @@ import APOChess.Main;
 import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Pieces.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -66,19 +67,14 @@ public class Chessboard {
 
     /**
      * Initialize the board with a configuration from the 'filepath' parameter
-     * @param filepath The path to the text file containing the configuration to load
+     * @param file The path to the text file containing the configuration to load
      */
-    public void initialize(String filepath) {
-        File configFile;
+    public void initialize(File file) {
         try {
-            configFile = new File(filepath);
-
-            this.board = configFile.getBoard();
+            this.board = new FileGame(file).getBoard();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        configFile = null;
     }
 
     /**

@@ -18,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -59,9 +60,14 @@ public class GameController extends MainController {
 
     private Game game;
 
+
     public GameController(Main main) {
+        this(main, null);
+    }
+
+    public GameController(Main main, File file) {
         super(main);
-        this.game = new Game(main);
+        this.game = new Game(main, file);
     }
 
     /**
@@ -186,7 +192,7 @@ public class GameController extends MainController {
             }
         }
 
-        main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] clicked.");
+        main.logger.log(Level.FINE, "Cell ["+col+";"+row+"] clicked.");
     }
 
     private void cellEntered(int col, int row) { //TODO

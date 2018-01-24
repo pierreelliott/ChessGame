@@ -35,7 +35,7 @@ public abstract class Piece {
     }
 
     /**
-     * File name for the image
+     * FileGame name for the image
      * @return String
      */
     public String getImage(){
