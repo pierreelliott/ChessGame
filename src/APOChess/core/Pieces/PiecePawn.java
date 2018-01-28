@@ -1,6 +1,7 @@
 package APOChess.core.Pieces;
 
 import APOChess.core.Action.Action;
+import APOChess.core.Action.ActionPromotion;
 import APOChess.core.Action.ActionRemove;
 import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Enum.TypeEnum;
@@ -75,39 +76,57 @@ public class PiecePawn extends Piece {
     public ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard) {
         ArrayList<Position> positions = new ArrayList<>();
 
-        if((color == ColorEnum.WHITE) && (position.getPosY() != 3) ||
-                (color == ColorEnum.BLACK) && (position.getPosY() != 4))
-            return positions;
-
         Position enPassantLeft = new Position(-1, 1);
         Position enPassantRight = new Position(1, 1);
         Position pLeft = new Position(-1,0);
         Position pRight = new Position(1,0);
+        Position pTop = new Position(0,1);
 
         if(color == ColorEnum.WHITE){
             enPassantLeft.invert();
             enPassantRight.invert();
             pLeft.invert();
             pRight.invert();
+            pTop.invert();
         }
 
-        // Avance coté //ENG
-        Position pSide = new Position(position, pLeft);
-        Position enPassantSide = new Position(position, enPassantLeft);
-        for(int i = 0; i<2; i++){
-            if(chessboard.isOnGrid(enPassantSide)) {
-                if (!chessboard.isOccuped(enPassantSide)) {
-                    if (chessboard.isOnGrid(pSide)) {
-                        if (chessboard.isOccuped(pSide)) {
-                            if (chessboard.getTile(pSide).getPiece().getColor() != color) {
-                                positions.add(enPassantSide);
+
+        if(!(
+            (color == ColorEnum.WHITE) && (position.getPosY() != 3) ||
+            (color == ColorEnum.BLACK) && (position.getPosY() != 4)))
+        {
+            // Avance coté //ENG
+            Position pSide = new Position(position, pLeft);
+            Position enPassantSide = new Position(position, enPassantLeft);
+            for(int i = 0; i<2; i++){
+                if(chessboard.isOnGrid(enPassantSide)) {
+                    if (!chessboard.isOccuped(enPassantSide)) {
+                        if (chessboard.isOnGrid(pSide)) {
+                            if (chessboard.isOccuped(pSide)) {
+                                if (chessboard.getTile(pSide).getPiece().getColor() != color) {
+                                    positions.add(enPassantSide);
+                                }
                             }
                         }
                     }
                 }
+                pSide = new Position(position, pRight);
+                enPassantSide = new Position(position, enPassantRight);
             }
-            pSide = new Position(position, pRight);
-            enPassantSide = new Position(position, enPassantRight);
+        }
+
+        // Promotion case
+        Position promotion = new Position(position, pTop);
+        if(chessboard.isOnGrid(promotion)) {
+            if(promotion.getPosY() == 7 || promotion.getPosY() == 0){
+                if (chessboard.isOccuped(promotion)) {
+                    if (chessboard.getTile(promotion).getPiece().getColor() != color) {
+                        positions.add(promotion);
+                    }
+                } else {
+                    positions.add(promotion);
+                }
+            }
         }
 
         return positions;
@@ -116,11 +135,16 @@ public class PiecePawn extends Piece {
     @Override
     public ArrayList<Action> getActions(Position positionStart, Position positionEnd) {
         ArrayList<Action> actions = new ArrayList<>();
-        if(positionStart.getPosX() - positionEnd.getPosX() > 0){
-            actions.add(new ActionRemove(new Position(positionStart, new Position(-1,0))));
-        } else {
-            actions.add(new ActionRemove(new Position(positionStart, new Position(1,0))));
+        if(positionStart.getPosX() != positionEnd.getPosX()){
+            if(positionStart.getPosX() - positionEnd.getPosX() > 0){
+                actions.add(new ActionRemove(new Position(positionStart, new Position(-1,0))));
+            } else {
+                actions.add(new ActionRemove(new Position(positionStart, new Position(1,0))));
+            }
         }
+
+        if(positionEnd.getPosY() == 0 || positionEnd.getPosY() == 7)
+            actions.add(new ActionPromotion());
 
         return actions;
     }

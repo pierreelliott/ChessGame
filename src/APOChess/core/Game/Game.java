@@ -188,4 +188,8 @@ public class Game {
         }
         return "";
     }
+
+    public void setPiece(Position pos, Piece piece){
+        board.getTile(pos).setPiece(piece);
+    }
 }

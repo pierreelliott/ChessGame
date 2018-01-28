@@ -3,14 +3,18 @@ package APOChess;
 import APOChess.core.Game.Chessboard;
 import APOChess.gui.controller.GameController;
 import APOChess.gui.controller.MenuController;
+import APOChess.gui.controller.PromoController;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
+import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +34,7 @@ public class Main extends Application {
     private Stage menu;
 
     /**
-     * Game window condif
+     * Game window config
      */
     private Stage game;
 
