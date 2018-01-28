@@ -9,10 +9,24 @@ import APOChess.core.Game.Position;
 import java.util.ArrayList;
 
 public abstract class Piece {
+    /**
+     * Color of the piece
+     */
     protected ColorEnum color;
+    /**
+     * Type of the piece
+     */
     protected TypeEnum type;
+    /**
+     * <em>false</em> while the piece don't move
+     */
     protected boolean moved = false;
 
+    /**
+     * Constructor
+     * @param color ColorEnum Color of the piece
+     * @param type TypeEnum Type of the piece
+     */
     public Piece(ColorEnum color, TypeEnum type) {
         this.color = color;
         this.type = type;
@@ -57,6 +71,12 @@ public abstract class Piece {
      */
     public abstract ArrayList<Position> getSpecialMoves(Position position, Chessboard chessboard);
 
+    /**
+     * Return a list of Action to process on a special move
+     * @param positionStart Position
+     * @param positionEnd Position
+     * @return ArrayList<Action>
+     */
     public abstract ArrayList<Action> getActions(Position positionStart, Position positionEnd);
 
     /**

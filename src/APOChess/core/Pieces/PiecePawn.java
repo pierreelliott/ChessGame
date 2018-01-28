@@ -35,7 +35,7 @@ public class PiecePawn extends Piece {
             pRight.invert();
         }
 
-        // Avance normale droite et double //ENG
+        // One and two steps movement
         pFront = new Position(position, pFront);
         pFront2 = new Position(position, pFront2);
 
@@ -46,26 +46,20 @@ public class PiecePawn extends Piece {
                 positions.add(pFront);
             }
 
-        if(
-            firstMoveToward && !moved
-//            (position.getPosY() == 6 && color == ColorEnum.WHITE) ||
-//            (position.getPosY() == 1 && color == ColorEnum.BLACK)
-            ){
+        if(firstMoveToward && !moved){
             if(chessboard.isOnGrid(pFront2))
                 if(chessboard.isOnGrid(pFront2))
                     if(!chessboard.isOccuped(pFront2))
                         positions.add(pFront2);
         }
 
-        // Avance coté //ENG
-        Position pSide = new Position(position, pLeft);
+        // Side movement
         Position enPassantSide = new Position(position, enPassantLeft);
         for(int i = 0; i<2; i++){
             if(chessboard.isOnGrid(enPassantSide))
                 if(chessboard.isOccuped(enPassantSide))
                     if(chessboard.getTile(enPassantSide).getPiece().getColor() != color)
                         positions.add(enPassantSide);
-            pSide = new Position(position, pRight);
             enPassantSide = new Position(position, enPassantRight);
         }
 
@@ -95,7 +89,7 @@ public class PiecePawn extends Piece {
             (color == ColorEnum.WHITE) && (position.getPosY() != 3) ||
             (color == ColorEnum.BLACK) && (position.getPosY() != 4)))
         {
-            // Avance coté //ENG
+            // Side movement
             Position pSide = new Position(position, pLeft);
             Position enPassantSide = new Position(position, enPassantLeft);
             for(int i = 0; i<2; i++){
@@ -135,6 +129,8 @@ public class PiecePawn extends Piece {
     @Override
     public ArrayList<Action> getActions(Position positionStart, Position positionEnd) {
         ArrayList<Action> actions = new ArrayList<>();
+
+        // En passant
         if(positionStart.getPosX() != positionEnd.getPosX()){
             if(positionStart.getPosX() - positionEnd.getPosX() > 0){
                 actions.add(new ActionRemove(new Position(positionStart, new Position(-1,0))));
@@ -143,6 +139,7 @@ public class PiecePawn extends Piece {
             }
         }
 
+        // Promotion
         if(positionEnd.getPosY() == 0 || positionEnd.getPosY() == 7)
             actions.add(new ActionPromotion());
 

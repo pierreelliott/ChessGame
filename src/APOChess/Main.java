@@ -1,20 +1,12 @@
 package APOChess;
 
-import APOChess.core.Game.Chessboard;
 import APOChess.gui.controller.GameController;
 import APOChess.gui.controller.MenuController;
-import APOChess.gui.controller.PromoController;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
-import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,11 +32,11 @@ public class Main extends Application {
 
     /**
      * Initalize first window
-     * @param primaryStage
+     * @param primaryStage Stage
      * @throws Exception
      */
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage  primaryStage) throws Exception{
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("gui/fx/MainFX.fxml"));
         primaryStage.setTitle("APO Chess");
@@ -66,13 +58,17 @@ public class Main extends Application {
         game.hide();
     }
 
+    /**
+     * Load a game with a File
+     * @param file File
+     */
     public void loadGame(File file){
         newGameMore(false, file); //FIXME a vérifier pour le boolean
     }
 
     /**
      * Show New Game windows
-     * @param solo
+     * @param solo boolean
      */
     public void newGame(boolean solo){
         newGameMore(solo, null);
@@ -80,13 +76,14 @@ public class Main extends Application {
 
     /**
      * Show New Game windows
-     * @param solo
+     * @param solo boolean
+     * @param file File for loading game
      */
     public void newGameMore(boolean solo, File file){
         menu.hide();
 
-        GridPane root = new GridPane();
-        final int size = 8;
+//        GridPane root = new GridPane();
+//        final int size = 8;
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();

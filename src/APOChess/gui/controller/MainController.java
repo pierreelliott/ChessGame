@@ -24,8 +24,8 @@ public class MainController implements Initializable {
 
     /**
      * Initialization of the gui
-     * @param url
-     * @param resourceBundle
+     * @param url URL
+     * @param resourceBundle ResourceBundle
      */
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle)

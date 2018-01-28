@@ -72,7 +72,7 @@ public class FileGame {
     }
 
     /**
-     * 
+     * Create the board
      * @throws Exception 
      */
     private void createBoard() throws Exception {
@@ -92,9 +92,6 @@ public class FileGame {
             line[1] = line[1].split("\n")[0];
             addPiece(createPiece(line[0], ColorEnum.WHITE), line[1]);
         }
-//        if(piecesCounter != 112228) { //FIXME
-//            throw new Exception("Error number of chess pieces : " + piecesCounter);
-//        }
 
         length = black.size();
         piecesCounter = 0;
@@ -103,9 +100,6 @@ public class FileGame {
             line[1] = line[1].split("\n")[0];
             addPiece(createPiece(line[0], ColorEnum.BLACK), line[1]);
         }
-//        if(piecesCounter != 112228) { //FIXME
-//            throw new Exception("Error number of chess pieces : "+ piecesCounter);
-//        }
     }
 
     /**

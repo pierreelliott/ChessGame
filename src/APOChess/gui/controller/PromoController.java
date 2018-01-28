@@ -32,22 +32,30 @@ public class PromoController extends MainController {
     @FXML
     private AnchorPane anchorID;
 
+    /**
+     * GameController for interacting when promoting
+     */
     private GameController gameController;
 
+    /**
+     * Color of pieces to show
+     */
     private ColorEnum colorEnum;
 
+    /**
+     * Constructor
+     * @param main Main
+     * @param gameController GameController for interacting when promoting
+     * @param colorEnum ColorEnum Color of pieces to show
+     */
     public PromoController(Main main, GameController gameController, ColorEnum colorEnum) {
         super(main);
         this.gameController = gameController;
         gameController.disableGrid();
+        gameController.setWaitingPromotion(true);
         this.colorEnum = colorEnum;
     }
 
-    /**
-     * Initialization of the gui
-     * @param url
-     * @param resourceBundle
-     */
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
@@ -73,7 +81,6 @@ public class PromoController extends MainController {
             imgv.fitWidthProperty().bind(gridID.widthProperty().divide(4));
             imgv.fitHeightProperty().bind(gridID.heightProperty().divide(1));
 
-            int finalI = i;
             imgv.setOnMouseEntered(event -> cellEntered(square));
             square.setOnMouseEntered(event -> cellEntered(square));
             imgv.setOnMouseClicked(event -> cellClicked(te, colorEnum));
@@ -87,9 +94,11 @@ public class PromoController extends MainController {
         // Registering listener for window resizing
         anchorID.widthProperty().addListener((observableValue, oldSceneWidth, newSceneWidth) -> resizeGrid());
         anchorID.heightProperty().addListener((observableValue, oldSceneHeight, newSceneHeight) -> resizeGrid());
-//        resizeGrid();
     }
 
+    /**
+     * Keep ratio of the grid when resizing
+     */
     private void resizeGrid() {
         double padding  = (anchorID.getHeight() - anchorID.getWidth() /4)/2;
         if(padding > 0D){
@@ -105,6 +114,11 @@ public class PromoController extends MainController {
         }
     }
 
+    /**
+     * When a cell is clicked
+     * @param typeEnum TypeEnum Type of the piece clicked
+     * @param colorEnum ColorEnum Color of the piece clicked
+     */
     private void cellClicked(TypeEnum typeEnum, ColorEnum colorEnum) {
         gameController.promote(typeEnum, colorEnum);
         gameController.setWaitingPromotion(false);
@@ -113,10 +127,18 @@ public class PromoController extends MainController {
         main.logger.log(Level.INFO, "Cell ["+typeEnum.toString()+"] clicked.");
     }
 
+    /**
+     * When mouse exited a cell
+     * @param square Rectangle
+     */
     private void cellExited(Rectangle square) {
         square.setFill(Color.rgb(244, 244, 244));
     }
 
+    /**
+     * When mouse entered a cell
+     * @param square Rectangle
+     */
     private void cellEntered(Rectangle square) {
         square.setFill(Color.rgb(110, 194, 116));
     }

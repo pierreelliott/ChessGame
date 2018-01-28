@@ -15,7 +15,6 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -57,35 +56,43 @@ public class GameController extends MainController {
     private CustomCell[][] customCells;
 
     /**
-     * <em>true</em> when the player selected a Piece.
-     */
-    private boolean clicked = false;
-
-    /**
      * CustomCell associated to the selected Piece on gui.
      */
     private CustomCell lastClick;
 
+    /**
+     * Game
+     */
     private Game game;
 
+    /**
+     * <em>true</em> when a promotion action is waiting
+     */
     private boolean waitingPromotion = false;
 
+    /**
+     * Position of the piece to promote
+     */
     private Position posToPromote = null;
 
+    /**
+     * Default constructor
+     * @param main Main
+     */
     public GameController(Main main) {
         this(main, null);
     }
 
+    /**
+     * File loading constructor
+     * @param main Main
+     * @param file File to load
+     */
     public GameController(Main main, File file) {
         super(main);
         this.game = new Game(main, file);
     }
 
-    /**
-     * Initialization of the gui
-     * @param url
-     * @param resourceBundle
-     */
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
@@ -116,12 +123,8 @@ public class GameController extends MainController {
                 // Registering functions associated with actions
                 int finalCol = col;
                 int finalRow = row;
-                imgv.setOnMouseEntered(event -> cellEntered(finalCol, finalRow));
-                square.setOnMouseEntered(event -> cellEntered(finalCol, finalRow));
                 imgv.setOnMouseClicked(event -> cellClicked(finalCol, finalRow));
                 square.setOnMouseClicked(event -> cellClicked(finalCol, finalRow));
-                imgv.setOnMouseExited(event -> cellExited(finalCol, finalRow));
-                square.setOnMouseExited(event -> cellExited(finalCol, finalRow));
 
                 // Backup everything into a CustomCell
                 customCells[col][row] = new CustomCell(col, row, square, color, imgv);
@@ -147,12 +150,17 @@ public class GameController extends MainController {
         }
     }
 
+    /**
+     * When a cell is clicked
+     * @param col int
+     * @param row int
+     */
     private void cellClicked(int col, int row){
         main.logger.log(Level.FINE, "Cell ["+col+";"+row+"] clicked.");
         if(waitingPromotion)
             return;
 
-        if(!game.isPieceSelected()){ // Si on a pas sélectionné de pions //ENG
+        if(!game.isPieceSelected()){ // First selection
             if(game.selectPiece(col, row)) {
                 ArrayList<Position> positionsStandard = game.getStandardMoves(col, row);
                 ArrayList<Position> positionsSpecial = game.getSpecialMoves(col, row);
@@ -166,33 +174,34 @@ public class GameController extends MainController {
                 }
             }
 
-        } else { // Si on a déjà sélectionner un pion //ENG
-            if(game.canMoveTo(col, row)){ // Si la case est une position valide //ENG
-                boolean executemove = true;
-                if(game.isSpecialMove(col,row)){
-                    main.logger.log(Level.WARNING, "Cell ["+col+";"+row+"] is a special move !.");
-                    ArrayList<Action> actions = game.getActions(col,row);
+        } else { // A piece has been already selected
+            if(game.canMoveTo(col, row)){ // Can move to that position
+                if(game.isSpecialMove(col,row)){ // Is a special move
+                    main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] is a special move !.");
+                    ArrayList<Action> actions = game.getActions(col,row); // Knowing what to do
                     for (Action action : actions) {
-                        if(action instanceof ActionMove){
+                        if(action instanceof ActionMove){ // Moving another piece on the board
                             Position posStart = ((ActionMove) action).getPosStart();
                             Position posEnd = ((ActionMove) action).getPosEnd();
                             game.moveOtherPiece(posStart, posEnd);
                             customCells[posStart.getPosX()][posStart.getPosY()].setImage(new PieceEmpty().getImage());
                             customCells[posEnd.getPosX()][posEnd.getPosY()]
                                     .setImage(game.getPieceImage(posEnd.getPosX(), posEnd.getPosY()));
-                        } else if (action instanceof ActionRemove){
+                        } else if (action instanceof ActionRemove){ // Removing a piece on the board
                             Position posRemove = ((ActionRemove) action).getPos();
                             game.removePiece(posRemove);
                             customCells[posRemove.getPosX()][posRemove.getPosY()].setImage(new PieceEmpty().getImage());
 
                             main.logger.log(Level.WARNING, "Cell ["+posRemove.getPosX()+";"+posRemove.getPosY()+"] is removed !.");
-                        } else if(action instanceof ActionPromotion){
+                        } else if(action instanceof ActionPromotion){ // Promoting the piece
                             posToPromote = new Position(col, row);
-                            try {
+                            try { // Loading Promote gui
                                 FXMLLoader fxmlLoader = new FXMLLoader();
                                 fxmlLoader.setLocation(getClass().getResource("../fx/PromoFX.fxml"));
 
-                                fxmlLoader.setController(new PromoController(main, this, game.getSelectedPiece().getColor()));
+                                fxmlLoader.setController(
+                                    new PromoController(main, this, game.getSelectedPiece().getColor())
+                                );
                                 Scene scene = new Scene(fxmlLoader.load(), 600, 200);
                                 Stage stage = new Stage();
                                 stage.setOnCloseRequest(Event::consume);
@@ -200,38 +209,29 @@ public class GameController extends MainController {
                                 stage.setScene(scene);
                                 stage.show();
                             } catch (IOException e) {
-                                main.logger.log(Level.SEVERE, "Failed to create new Window.", e);
+                                main.logger.log(Level.SEVERE, "Failed to create new Promote Window.", e);
                             }
                         }
                     }
                 }
 
-                if(executemove){
-                    String pieceImage = game.getSelectedPiece().getImage(); // Need to get the image before moving anything
-                    game.movePiece(col,row);
+                // Processing the movement.
 
-                    // On met a jour la nouvelle case graphique //ENG
-                    customCells[col][row].setImage(pieceImage);
+                // Need to get the image before moving anything
+                String pieceImage = game.getSelectedPiece().getImage();
+                game.movePiece(col,row);
 
-                    // On met a jour graphiquement l'ancienne case contenant la pièce, par du vide. //ENG
-                    customCells[lastClick.getCol()][lastClick.getRow()].setImage(new PieceEmpty().getImage());
-                }
-                restoreDefaultColor();
-            } else { // Si la case n'est pas une position valide //ENG
+                // Update image of the cell
+                customCells[col][row].setImage(pieceImage);
+
+                // Update previous cell with empty piece
+                customCells[lastClick.getCol()][lastClick.getRow()].setImage(new PieceEmpty().getImage());
+
+            } else { // The cell is not a valid move
                 game.selectPiece(-1,-1); // We deselect the piece
-                restoreDefaultColor();
             }
+            restoreDefaultColor();
         }
-    }
-
-    private void cellEntered(int col, int row) { //TODO
-        main.logger.log(Level.FINE, "Cell ["+col+";"+row+"] entered.");
-        //customCells[col][row].setColor(Color.rgb(200,200,200));
-    }
-
-    private void cellExited(int col, int row){ //TODO
-        main.logger.log(Level.FINE, "Cell ["+col+";"+row+"] exited.");
-        //customCells[col][row].setDefaultColor();
     }
 
     /**
@@ -240,7 +240,7 @@ public class GameController extends MainController {
     private void restoreDefaultColor(){
         for (int row = 0; row < SIZE_GRID; row++)
             for (int col = 0; col < SIZE_GRID; col++)
-                customCells[col][row].setDefaultColor();
+                customCells[col][row].applyDefaultColor();
     }
 
     /**
@@ -252,18 +252,36 @@ public class GameController extends MainController {
         main.showMenu();
     }
 
+    /**
+     * Waiting promotion setter
+     * Disable clicking on cell
+     * @param waitingPromotion boolean
+     */
     public void setWaitingPromotion(boolean waitingPromotion) {
         this.waitingPromotion = waitingPromotion;
     }
 
+    /**
+     * Disable the grid on the gui
+     */
     public void disableGrid(){
         gridID.setDisable(true);
     }
 
+    /**
+     * Enable the grid on the gui
+     */
     public void enableGrid(){
         gridID.setDisable(false);
     }
 
+    /**
+     * Process promoting
+     * Called by PromoController
+     * @param typeEnum TypeEnum Type chosen
+     * @param colorEnum ColorEnum Color of the piece
+     * @see PromoController
+     */
     public void promote(TypeEnum typeEnum, ColorEnum colorEnum){
         if(posToPromote == null){
             main.logger.log(Level.SEVERE, "Promote error pos");

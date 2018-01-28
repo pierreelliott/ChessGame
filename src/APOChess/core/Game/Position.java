@@ -1,14 +1,31 @@
 package APOChess.core.Game;
 
 public class Position {
+    /**
+     * X coord
+     */
     private int posX;
+
+    /**
+     * Y coord
+     */
     private int posY;
 
+    /**
+     * Cartesian constructor
+     * @param posX int
+     * @param posY int
+     */
     public Position(int posX, int posY) {
         this.posX = posX;
         this.posY = posY;
     }
 
+    /**
+     * Addition constructor
+     * @param p1 Position
+     * @param p2 Position
+     */
     public Position(Position p1, Position p2){
         this.posX = p1.getPosX() + p2.getPosX();
         this.posY = p1.getPosY() + p2.getPosY();
@@ -23,29 +40,11 @@ public class Position {
     }
 
     /**
-     * PosX setter
-     * @param posX The new value of posX
-     */
-    public Position setPosX(int posX) {
-        this.posX = posX;
-        return this;
-    }
-
-    /**
      * PosY getter
      * @return The value of posY
      */
     public int getPosY() {
         return posY;
-    }
-
-    /**
-     * PosY setter
-     * @param posY The new value of posY
-     */
-    public Position setPosY(int posY) {
-        this.posY = posY;
-        return this;
     }
 
     /**

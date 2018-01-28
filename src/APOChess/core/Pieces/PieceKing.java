@@ -32,7 +32,7 @@ public class PieceKing extends Piece {
                         }
                     } else {
                         /* If the Tile isn't threatened by an ennemy piece */
-                        if (!chessboard.getTile(pos).isDangerousFor(color)) {
+                        if (!chessboard.getTile(pos).isDangerousFor(color)) { //TODO
                             positions.add(pos);
                         }
                     }
