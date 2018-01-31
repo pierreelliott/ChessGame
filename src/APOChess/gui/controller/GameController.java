@@ -157,7 +157,7 @@ public class GameController extends MainController {
      */
     private void cellClicked(int col, int row){
         main.logger.log(Level.FINE, "Cell ["+col+";"+row+"] clicked.");
-        if(waitingPromotion)
+        if(waitingPromotion || game.isFinished())
             return;
 
         if(!game.isPieceSelected()){ // First selection
@@ -189,6 +189,10 @@ public class GameController extends MainController {
                                     .setImage(game.getPieceImage(posEnd.getPosX(), posEnd.getPosY()));
                         } else if (action instanceof ActionRemove){ // Removing a piece on the board
                             Position posRemove = ((ActionRemove) action).getPos();
+
+                            if(game.isKing(posRemove))
+                                game.setFinished(true);
+
                             game.removePiece(posRemove);
                             customCells[posRemove.getPosX()][posRemove.getPosY()].setImage(new PieceEmpty().getImage());
 
@@ -215,7 +219,12 @@ public class GameController extends MainController {
                     }
                 }
 
-                // Processing the movement.
+                // Processing if it is the end of the game.
+                if(game.isKing(col, row))
+                    game.setFinished(true);
+
+                if(game.isFinished())
+                    showEndWindow(game.getSelectedPiece().getColor());
 
                 // Need to get the image before moving anything
                 String pieceImage = game.getSelectedPiece().getImage();
@@ -250,6 +259,25 @@ public class GameController extends MainController {
     @FXML
     public void showMenu(ActionEvent event){
         main.showMenu();
+    }
+
+    private void showEndWindow(ColorEnum colorEnum){
+        try { // Loading End gui
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("../fx/EndFX.fxml"));
+
+            fxmlLoader.setController(
+                    new EndController(main, colorEnum)
+            );
+            Scene scene = new Scene(fxmlLoader.load(), 600, 200);
+            Stage stage = new Stage();
+            stage.setOnCloseRequest(Event::consume);
+            stage.setTitle("APO Chess Game Finished");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            main.logger.log(Level.SEVERE, "Failed to create new Promote Window.", e);
+        }
     }
 
     /**

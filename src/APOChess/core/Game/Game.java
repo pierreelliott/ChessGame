@@ -3,6 +3,7 @@ package APOChess.core.Game;
 import APOChess.Main;
 import APOChess.core.Action.Action;
 import APOChess.core.Enum.ColorEnum;
+import APOChess.core.Enum.TypeEnum;
 import APOChess.core.Pieces.Piece;
 
 import java.io.File;
@@ -13,6 +14,7 @@ public class Game {
     private boolean pieceSelected;
     private Chessboard board;
     private Position selectedPiecePosition;
+    private boolean isFinished = false;
 
     /**
      * Constructor for a default game
@@ -135,7 +137,6 @@ public class Game {
         Position newPos = new Position(col, row);
         if(board.isOnGrid(selectedPiecePosition) && board.isOnGrid(newPos)) {
             /* If the two pieces aren't the same color, we can move */
-            // FIXME Problem for special moves with King/Rook
             if( !(board.getTile(selectedPiecePosition).getPiece().getColor() == board.getTile(newPos).getPiece().getColor()) ) {
                 board.getTile(selectedPiecePosition).getPiece().move();
                 board.getTile(newPos).setPiece(board.getTile(selectedPiecePosition).getPiece());
@@ -195,6 +196,29 @@ public class Game {
         if(board.isOnGrid(positionPiece)){
             board.getTile(positionPiece).resetPiece();
         }
+    }
+
+    /**
+     * <em>true</em> if the position includes the ennemy king
+     * @param col int
+     * @param row int
+     * @return boolean
+     */
+    public boolean isKing(int col, int row){
+        return isKing(new Position(col, row));
+    }
+
+    /**
+     * <em>true</em> if the position includes the ennemy king
+     * @param position Position
+     * @return boolean
+     */
+    public boolean isKing(Position position){
+        if(pieceSelected && board.isOnGrid(position)) {
+            return board.getTile(position).getPiece().getType() == TypeEnum.KING &&
+                    getSelectedPiece().getColor() != board.getTile(position).getPiece().getColor();
+        }
+        return false;
     }
 
     /**
@@ -271,5 +295,13 @@ public class Game {
      */
     public void setPiece(Position pos, Piece piece){
         board.getTile(pos).setPiece(piece);
+    }
+
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    public void setFinished(boolean finished) {
+        isFinished = finished;
     }
 }

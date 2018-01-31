@@ -5,7 +5,6 @@ import APOChess.gui.controller.MenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -93,7 +92,7 @@ public class Main extends Application {
             Scene scene = new Scene(fxmlLoader.load(), 600, 400);
 
             game = new Stage();
-            game.setTitle("APO Chess APOChess.core.Game");
+            game.setTitle("APO Chess");
             game.setScene(scene);
             game.show();
         } catch (IOException e) {
