@@ -75,22 +75,26 @@ public class GameController extends MainController {
      */
     private Position posToPromote = null;
 
+    private boolean needIA;
+
     /**
      * Default constructor
      * @param main Main
      */
-    public GameController(Main main) {
-        this(main, null);
+    public GameController(Main main, boolean needIA) {
+        this(main, needIA, null);
     }
 
     /**
      * File loading constructor
      * @param main Main
+     * @param needIA Boolean
      * @param file File to load
      */
-    public GameController(Main main, File file) {
+    public GameController(Main main, boolean needIA, File file) {
         super(main);
         this.game = new Game(main, file);
+        this.needIA = needIA;
     }
 
     @FXML
@@ -186,7 +190,7 @@ public class GameController extends MainController {
                             game.moveOtherPiece(posStart, posEnd);
                             customCells[posStart.getPosX()][posStart.getPosY()].setImage(new PieceEmpty().getImage());
                             customCells[posEnd.getPosX()][posEnd.getPosY()]
-                                    .setImage(game.getPieceImage(posEnd.getPosX(), posEnd.getPosY()));
+                                    .setImage(game.getPieceImage(posEnd));
                         } else if (action instanceof ActionRemove){ // Removing a piece on the board
                             Position posRemove = ((ActionRemove) action).getPos();
 
@@ -196,7 +200,7 @@ public class GameController extends MainController {
                             game.removePiece(posRemove);
                             customCells[posRemove.getPosX()][posRemove.getPosY()].setImage(new PieceEmpty().getImage());
 
-                            main.logger.log(Level.WARNING, "Cell ["+posRemove.getPosX()+";"+posRemove.getPosY()+"] is removed !.");
+                            main.logger.log(Level.WARNING, "Cell "+posRemove.toString()+" is removed !.");
                         } else if(action instanceof ActionPromotion){ // Promoting the piece
                             posToPromote = new Position(col, row);
                             try { // Loading Promote gui
@@ -236,6 +240,13 @@ public class GameController extends MainController {
                 // Update previous cell with empty piece
                 customCells[lastClick.getCol()][lastClick.getRow()].setImage(new PieceEmpty().getImage());
 
+                if(needIA){
+                    ArrayList<Position> positions = game.IA();
+                    for (Position p : positions) {
+                        customCells[p.getPosX()][p.getPosY()].setImage(game.getPieceImage(p));
+                    }
+                }
+
             } else { // The cell is not a valid move
                 game.selectPiece(-1,-1); // We deselect the piece
             }
@@ -254,7 +265,7 @@ public class GameController extends MainController {
 
     /**
      * Show menu window.
-     * @param event
+     * @param event ActionEvent
      */
     @FXML
     public void showMenu(ActionEvent event){
@@ -338,7 +349,7 @@ public class GameController extends MainController {
             }
         }
         customCells[posToPromote.getPosX()][posToPromote.getPosY()]
-                .setImage(game.getPieceImage(posToPromote.getPosX(), posToPromote.getPosY()));
+                .setImage(game.getPieceImage(posToPromote));
         posToPromote = null;
     }
 }

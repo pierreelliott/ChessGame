@@ -116,7 +116,10 @@ public class Chessboard {
      * @return bool
      */
     public boolean isOnGrid(Position position){
-        return position.getPosX() >= 0 && position.getPosX() < 8 && position.getPosY() >= 0 && position.getPosY() < 8;
+        boolean a = position.getPosX() >= 0 && position.getPosX() < 8;
+        boolean b = position.getPosY() >= 0 && position.getPosY() < 8;
+        return a && b;
+
     }
 
     /**

@@ -2,12 +2,25 @@ package APOChess.core.Game;
 
 import APOChess.Main;
 import APOChess.core.Action.Action;
+import APOChess.core.Action.ActionMove;
+import APOChess.core.Action.ActionPromotion;
+import APOChess.core.Action.ActionRemove;
 import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Enum.TypeEnum;
-import APOChess.core.Pieces.Piece;
+import APOChess.core.IA.IA;
+import APOChess.core.IA.IAMovement;
+import APOChess.core.Pieces.*;
+import APOChess.gui.controller.PromoController;
+import javafx.event.Event;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.logging.Level;
 
 public class Game {
     private ColorEnum playerTurn;
@@ -15,6 +28,9 @@ public class Game {
     private Chessboard board;
     private Position selectedPiecePosition;
     private boolean isFinished = false;
+    private IA ia;
+    private Main main;
+    private Random generator;
 
     /**
      * Constructor for a default game
@@ -30,10 +46,13 @@ public class Game {
      * @param file File for loading a board
      */
     public Game(Main main, File file) {
+        this.main = main;
         this.pieceSelected = false;
         this.playerTurn = ColorEnum.WHITE;
+        this.generator = new Random();
 
         board = new Chessboard(main);
+        ia = new IA(board);
 
         if(file == null) {
             board.initialize();
@@ -115,11 +134,21 @@ public class Game {
      * If the location isn't correct, any actual piece is deselected.
      * @param col Piece's location's column
      * @param row Piece's location's row
-     * @return <em>True</em> if a piece has been selected (ie, the selection is on the board and it's the player turn), <em>False</em> otherwise
+     * @return <em>True</em> if a piece has been selected (ie, the selection is on the board and it's the player turn)
      */
     public boolean selectPiece(int col, int row) {
-        if(board.isOnGrid(new Position(col, row)) && board.getTile(col, row).getPiece().getColor() == playerTurn) {
-            selectedPiecePosition = new Position(col, row);
+        return selectPiece(new Position(col, row));
+    }
+
+    /**
+     * Select the piece located at the given column and row.
+     * If the location isn't correct, any actual piece is deselected.
+     * @param position Position
+     * @return <em>True</em> if a piece has been selected (ie, the selection is on the board and it's the player turn)
+     */
+    public boolean selectPiece(Position position) {
+        if(board.isOnGrid(position) && board.getTile(position).getPiece().getColor() == playerTurn) {
+            selectedPiecePosition = position;
             pieceSelected = true;
             return pieceSelected;
         }
@@ -134,8 +163,17 @@ public class Game {
      * @param row Row of the new piece's Position
      */
     public void movePiece(int col, int row) {
-        Position newPos = new Position(col, row);
-        if(board.isOnGrid(selectedPiecePosition) && board.isOnGrid(newPos)) {
+        movePiece(new Position(col, row));
+    }
+
+    /**
+     * Move a piece to the new Position (from col and row parameters)
+     * @param newPos Position
+     */
+    public void movePiece(Position newPos) {
+        boolean a = board.isOnGrid(selectedPiecePosition);
+        boolean b = board.isOnGrid(newPos);
+        if(a && b) {
             /* If the two pieces aren't the same color, we can move */
             if( !(board.getTile(selectedPiecePosition).getPiece().getColor() == board.getTile(newPos).getPiece().getColor()) ) {
                 board.getTile(selectedPiecePosition).getPiece().move();
@@ -228,7 +266,15 @@ public class Game {
      * @return boolean
      */
     public boolean isSpecialMove(int col, int row) {
-        Position newPos = new Position(col,row);
+        return isSpecialMove(new Position(col, row));
+    }
+
+    /**
+     * <em>true</em> when the position is a special move
+     * @param newPos Position
+     * @return boolean
+     */
+    public boolean isSpecialMove(Position newPos) {
         if(pieceSelected && board.isOnGrid(newPos)) {
             if (getSpecialMoves(selectedPiecePosition).contains(newPos)) {
                 return true;
@@ -244,9 +290,20 @@ public class Game {
      * @return ArrayList<Action>
      */
     public ArrayList<Action> getActions(int col, int row){
-        return board.getTile(selectedPiecePosition)
-                .getPiece().getActions(selectedPiecePosition, new Position(col, row));
+        return getActions(new Position(col, row));
     }
+
+    /**
+     * Return a list of Action associated of the piece on a location
+     * @param position Position
+     * @return ArrayList<Action>
+     */
+    public ArrayList<Action> getActions(Position position){
+        return board.getTile(selectedPiecePosition)
+                .getPiece().getActions(selectedPiecePosition, position);
+    }
+
+
 
     /**
      * <em>True</em> if a piece is selected
@@ -282,7 +339,15 @@ public class Game {
      * @return string
      */
     public String getPieceImage(int col, int row) {
-        Position pos = new Position(col, row);
+        return getPieceImage(new Position(col, row));
+    }
+
+    /**
+     * Get image of a piece.
+     * @param pos Position
+     * @return string
+     */
+    public String getPieceImage(Position pos) {
         if(board.isOnGrid(pos))
             return board.getTile(pos).getPiece().getImage();
         return "";
@@ -311,5 +376,88 @@ public class Game {
      */
     public void setFinished(boolean finished) {
         isFinished = finished;
+    }
+
+    //////////////////////////////////////////////////
+    //                   IA                         //
+    //////////////////////////////////////////////////
+
+    /**
+     * Process IA playing.
+     * @return ArrayList<Position> List of cell to refresh
+     */
+    public ArrayList<Position> IA(){
+        ArrayList<Position> positions = new ArrayList<>();
+        IAMovement iaMovement;
+        playerTurn = ColorEnum.BLACK;
+
+        // Select a good piece
+        do {
+            ia.processMovementsList();
+            if(!ia.isMovesPossible()){
+                main.logger.log(Level.SEVERE, "IA no possible moves !!!");
+                return positions;
+            }
+            iaMovement = ia.selectIAMovement();
+        } while(!selectPiece(iaMovement.getPosition()));
+
+        // Pick a random future position for that piece.
+        Position destPosition = iaMovement.getRandomMove();
+
+        // It totaly should be on the grid, but better preventing errors
+        if(!board.isOnGrid(destPosition)){
+            main.logger.log(Level.INFO, "IA destination of the move not on grid = " + destPosition.toString());
+            return positions;
+        }
+
+        // Process special moves
+        if(isSpecialMove(destPosition)){
+            main.logger.log(Level.INFO, "IA special move !");
+            ArrayList<Action> actions = getActions(destPosition); // Knowing what to do
+            for (Action action : actions){
+                if(action instanceof ActionMove){ // Moving another piece on the board
+                    Position posStart = ((ActionMove) action).getPosStart();
+                    Position posEnd = ((ActionMove) action).getPosEnd();
+                    moveOtherPiece(posStart, posEnd);
+                    positions.add(posStart);
+                    positions.add(posEnd);
+                } else if (action instanceof ActionRemove){ // Removing a piece on the board
+                    Position posRemove = ((ActionRemove) action).getPos();
+
+                    if(isKing(posRemove))
+                        setFinished(true);
+
+                    removePiece(posRemove);
+                    positions.add(posRemove);
+
+                    main.logger.log(Level.WARNING, "IA "+posRemove.toString()+" is removed !.");
+                } else if(action instanceof ActionPromotion){ // Promoting the piece
+                    switch (generator.nextInt(4)){ // Auto promote the piece
+                        case 0:
+                            setPiece(destPosition, new PieceBishop(ColorEnum.BLACK));
+                            break;
+                        case 1:
+                            setPiece(destPosition, new PieceKnight(ColorEnum.BLACK));
+                            break;
+                        case 2:
+                            setPiece(destPosition, new PieceQueen(ColorEnum.BLACK));
+                            break;
+                        case 3:
+                            setPiece(destPosition, new PieceRook(ColorEnum.BLACK));
+                            break;
+                        default:{
+                            main.logger.log(Level.SEVERE, "Promote error type");
+                        }
+                    }
+                }
+            }
+        }
+        positions.add(iaMovement.getPosition());
+        positions.add(destPosition);
+        if(isKing(destPosition))
+            isFinished = true;
+        movePiece(destPosition);
+        playerTurn = ColorEnum.WHITE;
+        return positions;
     }
 }

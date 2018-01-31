@@ -62,7 +62,7 @@ public class Main extends Application {
      * @param file File
      */
     public void loadGame(File file){
-        newGameMore(false, file); //FIXME a vérifier pour le boolean
+        newGameMore(false, file);
     }
 
     /**
@@ -80,15 +80,11 @@ public class Main extends Application {
      */
     public void newGameMore(boolean solo, File file){
         menu.hide();
-
-//        GridPane root = new GridPane();
-//        final int size = 8;
-
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("gui/fx/GameFX.fxml"));
 
-            fxmlLoader.setController(new GameController(this, file));
+            fxmlLoader.setController(new GameController(this, solo, file));
             Scene scene = new Scene(fxmlLoader.load(), 600, 400);
 
             game = new Stage();
