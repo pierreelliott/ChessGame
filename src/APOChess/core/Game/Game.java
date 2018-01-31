@@ -297,10 +297,18 @@ public class Game {
         board.getTile(pos).setPiece(piece);
     }
 
+    /**
+     * <em>true</em> when game is finished
+     * @return boolean
+     */
     public boolean isFinished() {
         return isFinished;
     }
 
+    /**
+     * Set finished status of the game
+     * @param finished boolean
+     */
     public void setFinished(boolean finished) {
         isFinished = finished;
     }

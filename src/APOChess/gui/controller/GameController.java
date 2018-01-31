@@ -261,6 +261,10 @@ public class GameController extends MainController {
         main.showMenu();
     }
 
+    /**
+     * Show the finished game window
+     * @param colorEnum ColorEnum Color of the winner
+     */
     private void showEndWindow(ColorEnum colorEnum){
         try { // Loading End gui
             FXMLLoader fxmlLoader = new FXMLLoader();

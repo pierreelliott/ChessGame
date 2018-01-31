@@ -21,12 +21,21 @@ import java.util.logging.Level;
 
 public class EndController extends MainController {
 
+    /**
+     * The only button on the window.
+     */
     @FXML
     private Button exitButton;
 
+    /**
+     * The label who explain which player has won.
+     */
     @FXML
     private Label labelID;
 
+    /**
+     * Color of the winner
+     */
     private ColorEnum colorWinner;
     /**
      * Constructor
