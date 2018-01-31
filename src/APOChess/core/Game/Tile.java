@@ -1,26 +1,19 @@
 package APOChess.core.Game;
 
-import APOChess.core.Enum.ColorEnum;
-import APOChess.core.Pieces.*;
-
-import java.util.ArrayList;
+import APOChess.core.Pieces.Piece;
+import APOChess.core.Pieces.PieceEmpty;
 
 public class Tile {
     /**
      * The piece currently on the tile
      */
     private Piece piece;
-    /**
-     * A list of all pieces that endanger this Tile (for the King)
-     */
-    private ArrayList<Piece> threats;
-    
+
     /**
      * Empty constructor
      */
     public Tile() {
-        this.piece = new PieceEmpty();
-        this.threats = new ArrayList<>();
+        this(new PieceEmpty());
     }
     
     /**
@@ -29,7 +22,6 @@ public class Tile {
      */
     public Tile(Piece piece) {
         this.piece = piece;
-        this.threats = new ArrayList<>();
     }
 
     /**
@@ -57,39 +49,6 @@ public class Tile {
     public Tile resetPiece(){
         this.piece = new PieceEmpty();
         return this;
-    }
-
-    public ArrayList<Piece> getThreats() {
-        return threats;
-    }
-
-    public void setThreats(ArrayList threats) {
-        this.threats = threats;
-    }
-
-    /**
-     *
-     * @param p
-     */
-    public void addThreat(Piece p) {
-        if(!threats.contains(p)) {
-            threats.add(p);
-        }
-    }
-
-    public void removeThreat(Piece p) {
-        if(threats.contains(p)) {
-            threats.remove(p);
-        }
-    }
-
-    public boolean isDangerousFor(ColorEnum color) {
-        for (Piece threat: threats) {
-            if(threat.getColor().equals(ColorEnum.getOpposite(color))) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

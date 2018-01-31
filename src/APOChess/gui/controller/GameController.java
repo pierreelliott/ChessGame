@@ -240,7 +240,7 @@ public class GameController extends MainController {
                 // Update previous cell with empty piece
                 customCells[lastClick.getCol()][lastClick.getRow()].setImage(new PieceEmpty().getImage());
 
-                if(needIA){
+                if(needIA && !game.isFinished()){
                     ArrayList<Position> positions = game.IA();
                     for (Position p : positions) {
                         customCells[p.getPosX()][p.getPosY()].setImage(game.getPieceImage(p));
