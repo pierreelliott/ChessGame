@@ -5,10 +5,6 @@ import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Enum.TypeEnum;
 import APOChess.core.Game.Game;
 import APOChess.core.Game.Position;
-import APOChess.core.Pieces.PieceBishop;
-import APOChess.core.Pieces.PieceKnight;
-import APOChess.core.Pieces.PieceQueen;
-import APOChess.core.Pieces.PieceRook;
 import APOChess.gui.custom.CustomCell;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -235,6 +231,7 @@ public class GameController extends MainController {
             }
             restoreDefaultColor();
         }
+        game.printBoard();
     }
 
     /**

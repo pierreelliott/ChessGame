@@ -159,4 +159,15 @@ public class Chessboard {
         positions = board[col][row].getPiece().getSpecialMoves(new Position(col, row), this);
         return positions;
     }
+
+    @Override
+    public String toString(){
+        String s = "";
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++)
+                s += this.board[j][i].getPiece().toString() + ' ';
+            s += '\n';
+        }
+        return s;
+    }
 }

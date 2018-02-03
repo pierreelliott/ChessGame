@@ -10,14 +10,8 @@ import APOChess.core.Enum.TypeEnum;
 import APOChess.core.IA.IA;
 import APOChess.core.IA.IAMovement;
 import APOChess.core.Pieces.*;
-import APOChess.gui.controller.PromoController;
-import javafx.event.Event;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
@@ -455,6 +449,13 @@ public class Game {
                 main.logger.log(Level.SEVERE, "Promote error type");
             }
         }
+    }
+
+    /**
+     * Print the Boad in the console
+     */
+    public void printBoard(){
+        System.out.println(board.toString());
     }
 
     //////////////////////////////////////////////////

@@ -119,4 +119,9 @@ public abstract class Piece {
     public boolean hasMoved(){
         return moved;
     }
+
+    @Override
+    public String toString(){
+        return color.getString() + type.toString();
+    }
 }
