@@ -106,8 +106,10 @@ public class GameController extends MainController {
                 square.setFill(color);
 
                 // Creation of the image associated to the cell
-                ImageView imgv = new ImageView(new Image(getClass()
-                        .getResourceAsStream("../../res/" + game.getPieceImage(col, row))));
+                ImageView imgv = new ImageView(new Image(
+                        ClassLoader.getSystemClassLoader().
+                                getSystemResourceAsStream("res/" + game.getPieceImage(col, row))
+                ));
 
                 gridID.add(square, col+1, row+1);
                 gridID.add(imgv, col+1, row+1);

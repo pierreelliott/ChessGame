@@ -110,15 +110,36 @@ public class PiecePawn extends Piece {
         }
 
         // Promotion case
+
         Position promotion = new Position(position, pTop);
         if(chessboard.isOnGrid(promotion)) {
             if(promotion.getPosY() == 7 || promotion.getPosY() == 0){
-                if (chessboard.isOccuped(promotion)) {
-                    if (chessboard.getTile(promotion).getPiece().getColor() != color) {
-                        positions.add(promotion);
+                if (!chessboard.isOccuped(promotion)) {
+                    positions.add(promotion);
+                }
+            }
+        }
+        Position promotionLeft = new Position(position, enPassantLeft);
+        if(chessboard.isOnGrid(promotionLeft)) {
+            if(promotionLeft.getPosY() == 7 || promotionLeft.getPosY() == 0){
+                if (chessboard.isOccuped(promotionLeft)) {
+                    if (chessboard.getTile(promotionLeft).getPiece().getColor() != color) {
+                        positions.add(promotionLeft);
                     }
                 } else {
-                    positions.add(promotion);
+                    positions.add(promotionLeft);
+                }
+            }
+        }
+        Position promotionRight = new Position(position, enPassantRight);
+        if(chessboard.isOnGrid(promotionRight)) {
+            if(promotionRight.getPosY() == 7 || promotionRight.getPosY() == 0){
+                if (chessboard.isOccuped(promotionRight)) {
+                    if (chessboard.getTile(promotionRight).getPiece().getColor() != color) {
+                        positions.add(promotionRight);
+                    }
+                } else {
+                    positions.add(promotionRight);
                 }
             }
         }

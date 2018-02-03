@@ -3,7 +3,6 @@ package APOChess.gui.controller;
 import APOChess.Main;
 import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Enum.TypeEnum;
-import APOChess.gui.custom.CustomCell;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -70,8 +69,9 @@ public class PromoController extends MainController {
             Rectangle square = new Rectangle();
             square.setFill(Color.rgb(244, 244, 244));
 
-            ImageView imgv = new ImageView(new Image(getClass()
-                    .getResourceAsStream("../../res/" + colorEnum.toString() + te.toString() + ".png")));
+            ImageView imgv = new ImageView(new Image(
+                    ClassLoader.getSystemClassLoader().
+                            getSystemResourceAsStream("res/" + colorEnum.toString() + te.toString() + ".png")));
 
             gridID.add(square, i, 0);
             gridID.add(imgv, i, 0);

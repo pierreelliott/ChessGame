@@ -99,7 +99,8 @@ public class CustomCell {
     public CustomCell setImage(String s){
         imageView.setImage(
                 new Image(
-                        getClass().getResourceAsStream("../../res/" + s)));
+                        ClassLoader.getSystemClassLoader().
+                                getSystemResourceAsStream("res/" + s)));
         return this;
     }
 }
