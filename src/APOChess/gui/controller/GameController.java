@@ -1,15 +1,14 @@
 package APOChess.gui.controller;
 
 import APOChess.Main;
-import APOChess.core.Action.Action;
-import APOChess.core.Action.ActionMove;
-import APOChess.core.Action.ActionPromotion;
-import APOChess.core.Action.ActionRemove;
 import APOChess.core.Enum.ColorEnum;
 import APOChess.core.Enum.TypeEnum;
 import APOChess.core.Game.Game;
 import APOChess.core.Game.Position;
-import APOChess.core.Pieces.*;
+import APOChess.core.Pieces.PieceBishop;
+import APOChess.core.Pieces.PieceKnight;
+import APOChess.core.Pieces.PieceQueen;
+import APOChess.core.Pieces.PieceRook;
 import APOChess.gui.custom.CustomCell;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -180,47 +179,30 @@ public class GameController extends MainController {
 
         } else { // A piece has been already selected
             if(game.canMoveTo(col, row)){ // Can move to that position
-                if(game.isSpecialMove(col,row)){ // Is a special move
-                    main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] is a special move !.");
-                    ArrayList<Action> actions = game.getActions(col,row); // Knowing what to do
-                    for (Action action : actions) {
-                        if(action instanceof ActionMove){ // Moving another piece on the board
-                            Position posStart = ((ActionMove) action).getPosStart();
-                            Position posEnd = ((ActionMove) action).getPosEnd();
-                            game.moveOtherPiece(posStart, posEnd);
-                            customCells[posStart.getPosX()][posStart.getPosY()].setImage(new PieceEmpty().getImage());
-                            customCells[posEnd.getPosX()][posEnd.getPosY()]
-                                    .setImage(game.getPieceImage(posEnd));
-                        } else if (action instanceof ActionRemove){ // Removing a piece on the board
-                            Position posRemove = ((ActionRemove) action).getPos();
 
-                            if(game.isKing(posRemove))
-                                game.setFinished(true);
+                ArrayList<Position> positionsToRefresh = game.processSpecialMoves(col,row);
+                for (Position p : positionsToRefresh) {
+                    customCells[p.getPosX()][p.getPosY()].setImage(game.getPieceImage(p));
+                }
+                if(game.isNeedPromote()){
+                    posToPromote = new Position(col,row);
+                    try { // Loading Promote gui
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        fxmlLoader.setLocation(getClass().getResource("../fx/PromoFX.fxml"));
 
-                            game.removePiece(posRemove);
-                            customCells[posRemove.getPosX()][posRemove.getPosY()].setImage(new PieceEmpty().getImage());
-
-                            main.logger.log(Level.WARNING, "Cell "+posRemove.toString()+" is removed !.");
-                        } else if(action instanceof ActionPromotion){ // Promoting the piece
-                            posToPromote = new Position(col, row);
-                            try { // Loading Promote gui
-                                FXMLLoader fxmlLoader = new FXMLLoader();
-                                fxmlLoader.setLocation(getClass().getResource("../fx/PromoFX.fxml"));
-
-                                fxmlLoader.setController(
-                                    new PromoController(main, this, game.getSelectedPiece().getColor())
-                                );
-                                Scene scene = new Scene(fxmlLoader.load(), 600, 200);
-                                Stage stage = new Stage();
-                                stage.setOnCloseRequest(Event::consume);
-                                stage.setTitle("APO Chess Promotion");
-                                stage.setScene(scene);
-                                stage.show();
-                            } catch (IOException e) {
-                                main.logger.log(Level.SEVERE, "Failed to create new Promote Window.", e);
-                            }
-                        }
+                        fxmlLoader.setController(
+                                new PromoController(main, this, game.getSelectedPiece().getColor())
+                        );
+                        Scene scene = new Scene(fxmlLoader.load(), 600, 200);
+                        Stage stage = new Stage();
+                        stage.setOnCloseRequest(Event::consume);
+                        stage.setTitle("APO Chess Promotion");
+                        stage.setScene(scene);
+                        stage.show();
+                    } catch (IOException e) {
+                        main.logger.log(Level.SEVERE, "Failed to create new Promote Window.", e);
                     }
+                    game.setNeedPromote(false);
                 }
 
                 // Processing if it is the end of the game.
@@ -238,7 +220,8 @@ public class GameController extends MainController {
                 customCells[col][row].setImage(pieceImage);
 
                 // Update previous cell with empty piece
-                customCells[lastClick.getCol()][lastClick.getRow()].setImage(new PieceEmpty().getImage());
+                customCells[lastClick.getCol()][lastClick.getRow()]
+                        .setImage(game.getPieceImage(lastClick.getCol(), lastClick.getRow()));
 
                 if(needIA && !game.isFinished()){
                     ArrayList<Position> positions = game.IA();
@@ -330,24 +313,7 @@ public class GameController extends MainController {
             main.logger.log(Level.SEVERE, "Promote error pos");
             return;
         }
-        switch (typeEnum){
-            case BISHOP:
-                game.setPiece(posToPromote, new PieceBishop(colorEnum));
-                break;
-            case KNIGHT:
-                game.setPiece(posToPromote, new PieceKnight(colorEnum));
-                break;
-            case QUEEN:
-                game.setPiece(posToPromote, new PieceQueen(colorEnum));
-                break;
-            case ROOK:
-                game.setPiece(posToPromote, new PieceRook(colorEnum));
-                break;
-            default:{
-                main.logger.log(Level.SEVERE, "Promote error type");
-                return;
-            }
-        }
+        game.promote(posToPromote, typeEnum, colorEnum);
         customCells[posToPromote.getPosX()][posToPromote.getPosY()]
                 .setImage(game.getPieceImage(posToPromote));
         posToPromote = null;

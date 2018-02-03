@@ -31,6 +31,7 @@ public class Game {
     private IA ia;
     private Main main;
     private Random generator;
+    private boolean needPromote = false;
 
     /**
      * Constructor for a default game
@@ -376,6 +377,84 @@ public class Game {
      */
     public void setFinished(boolean finished) {
         isFinished = finished;
+    }
+
+    /**
+     * Process a special movement.
+     * Return a list of Position to refresh on the gui.
+     * @param col int
+     * @param row int
+     * @return ArrayList<Position> List of Position to refresh on the gui
+     */
+    public ArrayList<Position> processSpecialMoves(int col, int row) {
+        ArrayList<Position> refreshPos = new ArrayList<>();
+        if(isSpecialMove(col,row)){ // Is a special move
+            main.logger.log(Level.INFO, "Cell ["+col+";"+row+"] is a special move !.");
+            ArrayList<Action> actions = getActions(col,row); // Knowing what to do
+            for (Action action : actions) {
+                if(action instanceof ActionMove){ // Moving another piece on the board
+                    Position posStart = ((ActionMove) action).getPosStart();
+                    Position posEnd = ((ActionMove) action).getPosEnd();
+                    moveOtherPiece(posStart, posEnd);
+                    refreshPos.add(posStart);
+                    refreshPos.add(posEnd);
+                } else if (action instanceof ActionRemove){ // Removing a piece on the board
+                    Position posRemove = ((ActionRemove) action).getPos();
+
+                    if(isKing(posRemove))
+                        setFinished(true);
+
+                    removePiece(posRemove);
+                    refreshPos.add(posRemove);
+                    main.logger.log(Level.WARNING, "Cell "+posRemove.toString()+" is removed !.");
+                } else if(action instanceof ActionPromotion){ // Promoting the piece
+                    needPromote = true;
+                }
+            }
+        }
+        return refreshPos;
+    }
+
+    /**
+     * Get isNeedPromote
+     * @return boolean
+     */
+    public boolean isNeedPromote() {
+        return needPromote;
+    }
+
+    /**
+     * Set needPromote
+     * @param needPromote boolean
+     */
+    public void setNeedPromote(boolean needPromote) {
+        this.needPromote = needPromote;
+    }
+
+    /**
+     * Processing promotion
+     * @param posToPromote Position of the piece to promote
+     * @param typeEnum TypeEnum of the new piece
+     * @param colorEnum ColorEnum of the new piece
+     */
+    public void promote(Position posToPromote, TypeEnum typeEnum, ColorEnum colorEnum){
+        switch (typeEnum){
+            case BISHOP:
+                setPiece(posToPromote, new PieceBishop(colorEnum));
+                break;
+            case KNIGHT:
+                setPiece(posToPromote, new PieceKnight(colorEnum));
+                break;
+            case QUEEN:
+                setPiece(posToPromote, new PieceQueen(colorEnum));
+                break;
+            case ROOK:
+                setPiece(posToPromote, new PieceRook(colorEnum));
+                break;
+            default:{
+                main.logger.log(Level.SEVERE, "Promote error type");
+            }
+        }
     }
 
     //////////////////////////////////////////////////
