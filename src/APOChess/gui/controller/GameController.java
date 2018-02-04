@@ -186,7 +186,7 @@ public class GameController extends MainController {
                     posToPromote = new Position(col,row);
                     try { // Loading Promote gui
                         FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("../fx/PromoFX.fxml"));
+                        fxmlLoader.setLocation(Main.class.getResource("gui/fx/PromoFX.fxml"));
 
                         fxmlLoader.setController(
                                 new PromoController(main, this, game.getSelectedPiece().getColor())
@@ -261,7 +261,7 @@ public class GameController extends MainController {
     private void showEndWindow(ColorEnum colorEnum){
         try { // Loading End gui
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("../fx/EndFX.fxml"));
+            fxmlLoader.setLocation(Main.class.getResource("gui/fx/EndFX.fxml"));
 
             fxmlLoader.setController(
                     new EndController(main, colorEnum)
